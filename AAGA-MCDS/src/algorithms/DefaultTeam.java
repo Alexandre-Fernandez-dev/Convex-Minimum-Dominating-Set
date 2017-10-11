@@ -222,4 +222,8 @@ public class DefaultTeam {
 		}
 		return points;
 	}
+	
+	boolean isValidCMDS(ArrayList<Point> points, ArrayList<Point> cmds) {
+	    return false;
+	}
 }

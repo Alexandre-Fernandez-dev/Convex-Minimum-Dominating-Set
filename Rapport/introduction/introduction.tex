@@ -1,0 +1,13 @@
+\section{Introduction}
+Etant donné un ensemble $\mathcal{S}$ de $n$ points sur $\mathbb R^2$, le rectangle minimum $\mathcal{R}$ est le plus petit rectangle orienté tel que $\forall p \in \mathcal{S}, p \in \mathcal{R}$. Il est évident que l'enveloppe convexe de $\mathcal{S}$ est contenu dans le rectangle minimum, on rappelle que l'enveloppe convexe $\mathcal{E}$ d'un ensemble de points  est le plus petit ensemble convexe qui contient ces points.
+
+Ainsi, l'algorithme de Toussaint pour obtenir le rectangle minimum d'un nuage de points démarre ses calculs à partir d'une enveloppe convexe qu'on aura calculée au préalable. Pour ce faire, il existe plusieurs algorithmes permettant d'obtenir l'enveloppe convexe d'un nuage de points dont les complexités varient selon le cas de figure :
+\begin{itemize}
+\item Parcours de Graham : $\mathcal{O}(n\log n)$
+\item Marche de Jarvis : $\mathcal{O}(nm)$ avec $m$ le nombre de sommets de l'enveloppe convexe ou $\mathcal{O}(n^2)$ dans le pire cas
+\item Quickhull : $\mathcal{O}(n\log n)$ ou $\mathcal{O}(n^2)$ dans le pire cas mais en pratique cet algorithme est très efficace et la plus utilisée
+\end{itemize}
+
+Dans notre démarche, nous nous servirons du parcours de Graham pour calculer l'enveloppe convexe avant d'appliquer l'algorithme de Toussaint à proprement dit. Dans un deuxième temps, nous renouvellerons l'expérience avec l'algorithme de Ritter calculant le cercle minimum. Les résultats obtenus seront ensuite analysés pour déterminer la qualité en tant que conteneur de ces 2 algorithmes, les détails de l'étude seront montrés dans la partie \ref{efficacite} de ce rapport.
+
+Enfin, nous nous poserons la question de la validité de ces algorithmes sur un espace de dimension 3.

@@ -1,0 +1,28 @@
+\section{Mesure des performances}
+\label{efficacite}
+Dans cette dernière partie nous allons appliquer les différent algorithmes sur un grand nombre d'instances de test contenant chacune 256 points. Cela nous permettra de faire une moyenne sur le temps d'exécution mais aussi sur l'efficacité des conteneurs que sont le rectangle et le cercle par rapport au polygone convexe qui est la plus optimale.
+
+La formule calculant l'efficacité en \%, c'est-à-dire dans quelle proportion est-ce que l'aire du conteneur est plus grand que l'aire de l'enveloppe convexe), est la suivante :
+\begin{equation}
+\textrm{qualité} = \left( \frac{\textrm{aire}}{\textrm{aire polygone}} \times 100\right) - 100
+\end{equation}
+
+Pour calculer l'aire du polygone, nous nous servons de la formule suivante (donnée en \cite{mathwords}) :
+\begin{equation}
+\textrm{aire polygone} = \frac{1}{2} \begin{vmatrix}
+x_1 & y_1 \\
+x_2 & y_2 \\
+x_3 & y_3 \\
+\vdots & \vdots \\
+x_n & y_n \\
+x_1 & y_1
+\end{vmatrix}
+\label{aire}
+\end{equation}
+
+La formule \eqref{aire} est également utilisée pour calculer l'aire du rectangle. Quand à l'aire du cercle, nous nous servons tout simplement de la formule :
+\begin{equation}
+\textrm{aire cercle} = \pi r^2
+\end{equation}
+\input{developpement/resultats}
+\input{developpement/interpretation}

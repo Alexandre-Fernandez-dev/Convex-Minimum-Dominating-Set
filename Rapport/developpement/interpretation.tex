@@ -1,0 +1,11 @@
+\subsection{Interprétation}
+D'après les résultats obtenus, on remarque que l'algorithme de Toussaint prend largement plus de temps à s'exécuter par rapport à l'algorithme de Ritter. En effet, nous avions vu que l'algorithme de Toussaint était pseudo-linéaire, dû au parcours préliminaire de Graham, alors que celui de Ritter est linéaire. Dans un cas défavorable, on peut même observer que l'algorithme de Toussaint est 6 fois plus long en exécution que celui de Ritter.
+
+En terme d'efficacité, l'algorithme de Ritter est également plus optimale puisque que la superficie du cercle minimum est en moyenne 20.52\% plus grand que celle de l'enveloppe convexe, contre 25.35\% pour le rectangle minimum.
+
+On pourrait prendre d'autres critères d'évaluation que le temps d'exécution ou l'efficacité comme la complexité mémoire par exemple, qui serait elle aussi à l'avantage de l'algorithme de Ritter étant donné que celui de Toussaint requiert la conservation en mémoire de beaucoup plus de paramètres.
+
+\paragraph{}
+Tout porte à croire que l'algorithme de Ritter est largement préférable à celui de Toussaint, pour en être sûr il aurait fallu expérimenter sur un plus large éventail de test que celui de VAROUMAS et sur des instances plus grandes : 256 points constitue en effet une instance de taille relativement petite.
+
+En revanche, pour en revenir au temps d'exécution, l'algorithme de Toussaint semble être un bon candidat à la parallélisation. En effet, on pourrait répartir les calculs de chaque rectangle et les exécuter en parallèle avant de finalement comparer leur superficie, contrairement à l'algorithme de Ritter qui n'est pas parallélisable puisque c'est un algorithme glouton. Si cette parallélisation s'avère efficace, le temps d'exécution moyen s'en trouverait largement réduit même si le parcours de Graham est toujours présent dont le temps d'exécution est supérieur à Ritter.
