@@ -15,19 +15,41 @@ import java.io.InputStreamReader;
 
 public class DefaultTeam {
 	public static void main(String[] args) {
-		Object[] ret100 = test(1,100);
-		System.out.println("100 points - Average size : " + ret100[0] + " points - Average time : " + ret100[1] + " s");
-		Object[] ret500 = test(1,500);
-		System.out.println("500 points - Average size : " + ret500[0] + " points - Average time : " + ret500[1] + " s");
-		Object[] ret1000 = test(1,1000);
-		System.out.println("1000 points - Average size : " + ret1000[0] + " points - Average time : " + ret1000[1] + " s");
-		Object[] ret5000 = test(1,5000);
-		System.out.println("5000 points - Average size : " + ret5000[0] + " points - Average time : " + ret5000[1] + " s");
-		Object[] ret10000 = test(1,10000);
-		System.out.println("10000 points - Average size : " + ret10000[0] + " points - Average time : " + ret10000[1] + " s");
+		Object[] ret100 = test(1,100, 50);
+		Object[] ret500 = test(1,500, 50);
+		Object[] ret1000 = test(1,1000, 50);
+		Object[] ret5000 = test(1,5000, 50);
+		Object[] ret10000 = test(1,10000, 50);
+		
+		Object[] ret2100 = test(2,100, 5);
+		Object[] ret2500 = test(2,500, 25);
+		Object[] ret21000 = test(2,1000, 50);
+		Object[] ret25000 = test(2,5000, 250);
+		Object[] ret210000 = test(2,10000, 500);
+		
+		System.out.println("1 - 100 points - Average size : " + ret100[0] + " points - Average time : " + ret100[1] + " s");
+		
+		System.out.println("1 - 500 points - Average size : " + ret500[0] + " points - Average time : " + ret500[1] + " s");
+
+		System.out.println("1 - 1000 points - Average size : " + ret1000[0] + " points - Average time : " + ret1000[1] + " s");
+		
+		System.out.println("1 - 5000 points - Average size : " + ret5000[0] + " points - Average time : " + ret5000[1] + " s");
+
+		System.out.println("1 - 10000 points - Average size : " + ret10000[0] + " points - Average time : " + ret10000[1] + " s");
+		
+		
+		System.out.println("2 - 100 points - Average size : " + ret2100[0] + " points - Average time : " + ret2100[1] + " s");
+		
+		System.out.println("2 - 500 points - Average size : " + ret2500[0] + " points - Average time : " + ret2500[1] + " s");
+
+		System.out.println("2 - 1000 points - Average size : " + ret21000[0] + " points - Average time : " + ret21000[1] + " s");
+		
+		System.out.println("2 - 5000 points - Average size : " + ret25000[0] + " points - Average time : " + ret25000[1] + " s");
+
+		System.out.println("2 - 10000 points - Average size : " + ret210000[0] + " points - Average time : " + ret210000[1] + " s");
 	}
 	
-	public static Object[] test(int id, int nb) {
+	public static Object[] test(int id, int nb, int edgeTreshold) {
 		DefaultTeam d = new DefaultTeam();
 		int[] sizes = new int[100];
 		double[] times = new double[100];
@@ -35,7 +57,7 @@ public class DefaultTeam {
 			System.out.println("Test "+i);
 			ArrayList<Point> points = d.readFromFile("tests"+id+"-"+nb+"/test"+(i+1)+".points");
 			long time1 = System.currentTimeMillis();
-			ArrayList<Point> pts = d.calculConnectedDominatingSet(points, 55);
+			ArrayList<Point> pts = d.calculConnectedDominatingSet(points, edgeTreshold);
 			long time2 = System.currentTimeMillis();
 			times[i] = (time2-time1);
 			sizes[i] = pts.size();

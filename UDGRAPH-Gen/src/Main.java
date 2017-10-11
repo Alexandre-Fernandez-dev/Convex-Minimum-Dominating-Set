@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -12,16 +14,38 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
+			Files.createDirectories(Paths.get("tests1-100"));
+			Files.createDirectories(Paths.get("tests1-500"));
+			Files.createDirectories(Paths.get("tests1-1000"));
+			Files.createDirectories(Paths.get("tests1-5000"));
+			Files.createDirectories(Paths.get("tests1-10000"));
 			for(int i=1; i<=100; i++)
-				export(new File("tests1-100/test"+i+".points"), generateGraph(100, 55));
+				export(new File("tests1-100/test"+i+".points"), generateGraph(1000, 1000, 100, 50));
 			for(int i=1; i<=100; i++)
-				export(new File("tests1-500/test"+i+".points"), generateGraph(500, 55));
+				export(new File("tests1-500/test"+i+".points"), generateGraph(1000, 1000, 500, 50));
 			for(int i=1; i<=100; i++)
-				export(new File("tests1-1000/test"+i+".points"), generateGraph(1000, 55));
+				export(new File("tests1-1000/test"+i+".points"), generateGraph(1000, 1000, 1000, 50));
 			for(int i=1; i<=100; i++)
-				export(new File("tests1-5000/test"+i+".points"), generateGraph(5000, 55));
+				export(new File("tests1-5000/test"+i+".points"), generateGraph(1000, 1000, 5000, 50));
 			for(int i=1; i<=100; i++)
-				export(new File("tests1-10000/test"+i+".points"), generateGraph(10000, 55));
+				export(new File("tests1-10000/test"+i+".points"), generateGraph(1000, 1000, 10000, 50));
+			
+			
+			Files.createDirectories(Paths.get("tests2-100"));
+			Files.createDirectories(Paths.get("tests2-500"));
+			Files.createDirectories(Paths.get("tests2-1000"));
+			Files.createDirectories(Paths.get("tests2-5000"));
+			Files.createDirectories(Paths.get("tests2-10000"));
+			for(int i=1; i<=100; i++)
+				export(new File("tests2-100/test"+i+".points"), generateGraph(100, 100, 100, 5));
+			for(int i=1; i<=100; i++)
+				export(new File("tests2-500/test"+i+".points"), generateGraph(500, 500, 500, 25));
+			for(int i=1; i<=100; i++)
+				export(new File("tests2-1000/test"+i+".points"), generateGraph(1000, 1000, 1000, 50));
+			for(int i=1; i<=100; i++)
+				export(new File("tests2-5000/test"+i+".points"), generateGraph(5000, 5000, 5000, 250));
+			for(int i=1; i<=100; i++)
+				export(new File("tests2-10000/test"+i+".points"), generateGraph(10000, 10000, 10000, 500));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -36,13 +60,13 @@ public class Main {
 		bw.close();
 	}
 	
-	public static ArrayList<Point> generateGraph(int n, int edgeTreshold) {
+	public static ArrayList<Point> generateGraph(int width, int height, int n, int edgeTreshold) {
 		ArrayList<Point> result = new ArrayList<Point>();
 		Random r = new Random(System.currentTimeMillis());
 
 		while(result.size() != n) {
 			while(result.size() != n) {
-				result.add(new Point(r.nextInt(1000), r.nextInt(1000)));
+				result.add(new Point(r.nextInt(width), r.nextInt(height)));
 			}
 
 			ArrayList<VertexDS> graph = new ArrayList<VertexDS>();
