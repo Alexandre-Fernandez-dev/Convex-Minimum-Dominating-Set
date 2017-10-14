@@ -10,6 +10,9 @@ public class VertexDS {
 	public int id;
 	public Color color = Color.gray;
 	
+	public Color misColor = Color.white;
+	public boolean isActive = false;
+	
 	public DisjointSetElement<VertexDS> bbcomp;
 
 	public VertexDS(Point p, int id) {
@@ -25,5 +28,14 @@ public class VertexDS {
 	public int degree() {
 		return neighbors.size();
 	}
+	
+	public int getEffDeg() {
+	    int i = 0;
+	    for (VertexDS v : this.neighbors)
+		if (v.misColor == color.white)
+		    i++;
+	    return i;
+	}
+	
 
 }
