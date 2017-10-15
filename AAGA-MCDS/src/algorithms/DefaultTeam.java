@@ -15,116 +15,17 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 public class DefaultTeam {
-	public static void main(String[] args) {
-		Object[][] ret100 = test(1, 100, 50);
-		Object[][] ret500 = test(1, 500, 50);
-		Object[][] ret1000 = test(1, 1000, 50);
-		Object[][] ret5000 = test(1, 5000, 50);
-		Object[][] ret10000 = test(1, 10000, 50);
+	public static int useMIS = 1;
 
-		//	Object[] ret2100 = test(2, 100, 5);
-		//	Object[] ret2500 = test(2, 500, 25);
-		//	Object[] ret21000 = test(2, 1000, 50);
-		//	Object[] ret25000 = test(2, 5000, 250);
-		//	Object[] ret210000 = test(2, 10000, 500);
-
-		System.out.println(
-				"1 - 1 - 100 points - Average size : " + ret100[0][0] + " points - Average time : " + ret100[0][1] + " s - Fails : " + ret100[0][2]);
-		System.out.println(
-				"1 - 2 - 100 points - Average size : " + ret100[1][0] + " points - Average time : " + ret100[1][1] + " s - Fails : " + ret100[1][2]);
-
-		System.out.println(
-				"1 - 1 - 500 points - Average size : " + ret500[0][0] + " points - Average time : " + ret500[0][1] + " s - Fails : " + ret500[0][2]);
-		System.out.println(
-				"1 - 2 - 500 points - Average size : " + ret500[1][0] + " points - Average time : " + ret500[1][1] + " s - Fails : " + ret500[1][2]);
-
-		System.out.println(
-				"1 - 1 - 1000 points - Average size : " + ret1000[0][0] + " points - Average time : " + ret1000[0][1] + " s - Fails : " + ret1000[0][2]);
-		System.out.println(
-				"1 - 1 - 1000 points - Average size : " + ret1000[1][0] + " points - Average time : " + ret1000[1][1] + " s - Fails : " + ret1000[1][2]);
-
-		System.out.println(
-				"1 - 1 - 5000 points - Average size : " + ret5000[0][0] + " points - Average time : " + ret5000[0][1] + " s - Fails : " + ret5000[0][2]);
-		System.out.println(
-				"1 - 2 - 5000 points - Average size : " + ret5000[1][0] + " points - Average time : " + ret5000[1][1] + " s - Fails : " + ret5000[1][2]);
-
-		System.out.println(
-				"1 - 1 - 10000 points - Average size : " + ret10000[0][0] + " points - Average time : " + ret10000[0][1] + " s - Fails : " + ret10000[0][2]);
-		System.out.println(
-				"1 - 2 - 10000 points - Average size : " + ret10000[1][0] + " points - Average time : " + ret10000[1][1] + " s - Fails : " + ret10000[1][2]);
-
-		//	System.out.println(
-		//		"2 - 100 points - Average size : " + ret2100[0] + " points - Average time : " + ret2100[1] + " s");
-		//
-		//	System.out.println(
-		//		"2 - 500 points - Average size : " + ret2500[0] + " points - Average time : " + ret2500[1] + " s");
-		//
-		//	System.out.println(
-		//		"2 - 1000 points - Average size : " + ret21000[0] + " points - Average time : " + ret21000[1] + " s");
-		//
-		//	System.out.println(
-		//		"2 - 5000 points - Average size : " + ret25000[0] + " points - Average time : " + ret25000[1] + " s");
-		//
-		//	System.out.println("2 - 10000 points - Average size : " + ret210000[0] + " points - Average time : "
-		//		+ ret210000[1] + " s");
-	}
-
-	public static Object[][] test(int id, int nb, int edgeTreshold) {
-		DefaultTeam d = new DefaultTeam();
-		int[] sizes = new int[100];
-		double[] times = new double[100];
-		int fails = 0;
-		int[] sizes2 = new int[100];
-		double[] times2 = new double[100];
-		int fails2 = 0;
-		for (int i = 0; i < 100; i++) {
-			System.out.println("Test " + (i+1));
-			ArrayList<Point> points = d.readFromFile("tests" + id + "-" + nb + "/test" + (i + 1) + ".points");
-			long time1 = System.currentTimeMillis();
-			ArrayList<Point> pts = d.calculConnectedDominatingSetV1(points, edgeTreshold);
-			long time2 = System.currentTimeMillis();
-			times[i] = (time2 - time1);
-			sizes[i] = pts.size();
-			boolean valid = isValid(points, pts, edgeTreshold);
-			System.out.println((i+1) + " END 1 - size : " + pts.size() + " - time : " + times[i] / 1000 + " s - valid : " + valid);
-			if(!valid) fails++;
-
-			long time21 = System.currentTimeMillis();
-			ArrayList<Point> pts2 = d.calculConnectedDominatingSetV2(points, edgeTreshold);
-			long time22 = System.currentTimeMillis();
-			times2[i] = (time22 - time21);
-			sizes2[i] = pts.size();
-			boolean valid2 = isValid(points, pts2, edgeTreshold);
-
-			System.out.println((i+1) + " END 2 - size : " + pts2.size() + " - time : " + times2[i] / 1000 + " s - valid : " + valid2);
-			if(!valid2) fails2++;
-		}
-		int avsize = 0;
-		for (int s : sizes)
-			avsize += s;
-		avsize /= 100;
-		double avtime = 0;
-		for (double t : times)
-			avtime += t;
-		avtime /= 100.0 * 1000.0;
-		System.out.println("Average size : " + avsize + " points - Average time : " + avtime + " s");
-		return new Object[][] { {avsize, avtime, fails}, { avsize, avtime, fails } };
-	}
-	
 	public ArrayList<Point> calculConnectedDominatingSet(ArrayList<Point> points, int edgeTreshold) {
-		return calculConnectedDominatingSetV1(points, edgeTreshold);
-	}
+		ArrayList<NodeVertexDS> graph = new ArrayList<NodeVertexDS>();
 
-	private static boolean isValid(ArrayList<Point> points, ArrayList<Point> pts, int edgeTreshold) {
-		ArrayList<VertexDS> graphcds = new ArrayList<VertexDS>();
-		boolean ret = true;
-		for (int i = 0; i < pts.size(); i++) {
-			VertexDS v = new VertexDS(pts.get(i), i);
-			graphcds.add(v);
-			v.makeBBComp();
+		//BUILD THE GRAPH STRUCTURE
+		for (int i = 0; i < points.size(); i++) {
+			graph.add(new NodeVertexDS(points.get(i), i));
 		}
-		for (VertexDS v : graphcds) {
-			for (VertexDS v2 : graphcds) {
+		for (NodeVertexDS v : graph) {
+			for (NodeVertexDS v2 : graph) {
 				if (v == v2)
 					continue;
 				if (v.p.distance(v2.p) < edgeTreshold) {
@@ -132,22 +33,258 @@ public class DefaultTeam {
 				}
 			}
 		}
+		// START
 
-		for(VertexDS v : graphcds) {
-			for(VertexDS vn : v.neighbors) {
-				v.bbcomp.union(vn.bbcomp);
-			}
+		// CALCULATE MIS
+		ArrayList<NodeVertexDS> MIS = new ArrayList<NodeVertexDS>();
+		
+		if(DefaultTeam.useMIS  == 1)
+			MIS = distributedMIS1(graph);
+		else if(DefaultTeam.useMIS == 2)
+			MIS = distributedMIS2(graph);
+		
+		// AT FIRST ALL ELEMENTS OF THE MIS ARE BLACK AND FORM DISJOINT BLACK-BLUE COMPONENTS
+		// MAKE A DISJOINT SET ELEMENT REPRESENTING A BLACK-BLUE COMPONENT (BB COMPONENTS)
+		for (NodeVertexDS vi : MIS) {
+			vi.color = Color.BLACK;
+			vi.makeDSElement();
 		}
 
-		HashSet<DisjointSetElement<VertexDS>> compconnex = new HashSet<DisjointSetElement<VertexDS>>();
-		for(VertexDS v : graphcds) {
-			compconnex.add(v.bbcomp.find());
+		// GRAY NODES
+		ArrayList<NodeVertexDS> grayNodes = (ArrayList<NodeVertexDS>) graph.clone();
+		grayNodes.removeAll(MIS);
+
+		for (int i = 5; i >= 2; i--) {
+			boolean cont = true;
+			while (cont) { //WHILE THERE IS GRAY NODES WITH AT LEAST i BLACK NEIGHBORS IN DIFFERENT BB COMPONENTS
+				int newblueId = -1;
+				for (int j = 0; j < grayNodes.size(); j++) {
+					NodeVertexDS vgray = grayNodes.get(j);
+					if (vgray.degree() < i)
+						continue;
+					
+					//COUNT BLACK NEIGBORS
+					ArrayList<NodeVertexDS> blackneighbors = new ArrayList<NodeVertexDS>();
+					for (NodeVertexDS vgraynei : vgray.neighbors)
+						if (vgraynei.color == Color.BLACK)
+							blackneighbors.add(vgraynei);
+					if (blackneighbors.size() < i)
+						continue;
+					
+					//FIND ROOT NODE INDISJOINT SET OF ALL BLACK NEIGHBORS
+					ArrayList<DisjointSetElement<NodeVertexDS>> neiBBcompsroots = new ArrayList<DisjointSetElement<NodeVertexDS>>();
+					for (NodeVertexDS blackn : blackneighbors) {
+						neiBBcompsroots.add(blackn.disjointSetElem.find());
+					}
+
+					//COUNT DIFFERENT BLACK BLUE COMPONENTS ( == number of black neighbors that are in different disjoint set)
+					HashSet<Integer> idsbbcomps = new HashSet<Integer>();
+					for (DisjointSetElement<NodeVertexDS> rootneibbcomp : neiBBcompsroots) {
+						idsbbcomps.add(rootneibbcomp.index);
+					}
+					if (idsbbcomps.size() < i)
+						continue;
+					
+					vgray.color = Color.BLUE;
+					newblueId = j;
+					// IF THE NODE HAS BEED TURNED TO BLUE, ALL BLACK BLUE COMPONENTS INDUCED
+					// BY ITS BLACK NEIGBORS ARE MERGED
+					for (int id = 1; id < neiBBcompsroots.size(); id++) {
+						blackneighbors.get(0).disjointSetElem.union(blackneighbors.get(id).disjointSetElem);
+					}
+					break;
+				}
+				if (newblueId != -1)
+					grayNodes.remove(newblueId);
+				else //NEXT FOR LOOP : DECREASE i
+					cont = false;
+			}
+
+		}
+
+		ArrayList<Point> result = new ArrayList<Point>();
+		for (NodeVertexDS v : graph) {
+			if (v.color.equals(Color.BLUE))
+				result.add(v.p);
+			if (v.color.equals(Color.BLACK))
+				result.add(v.p);
+		}
+		return result;
+	}
+	
+	public ArrayList<NodeVertexDS> distributedMIS2(ArrayList<NodeVertexDS> points) {
+		ArrayList<NodeVertexDS> graph = (ArrayList<NodeVertexDS>) points.clone();
+		for (int i = 0; i < graph.size(); i++) {
+			graph.get(i).makeDSElement();
+		}
+		
+		System.err.println("graph size : " + graph.size());
+		
+		//BUILD A SPANNING TREE (KRUSKAL USING DISJOINT SET AND WITHOUT CARE OF EDGE LENGTH)
+		for (NodeVertexDS v : graph) {
+			for(NodeVertexDS vn : v.neighbors) {
+				if(!v.disjointSetElem.find().equals(vn.disjointSetElem.find())) {
+					v.neighborsTree.add(vn);
+					vn.neighborsTree.add(v);
+					v.disjointSetElem.union(vn.disjointSetElem);
+				}
+			}
+		}
+		
+		//CHOOSE ARBITRARY ROOT NODE FOR THE TREE
+		NodeVertexDS root = graph.get(0);
+		
+		//INITIATE TREE DATA STRUCTURE
+		//(converts treeNeighbors into parent and children and instanciate the int rank)
+		root.initiateRank(0);
+		
+		//root.checkRoot(); TEST
+		
+		System.err.println("tree vs points " + root.count + " " + points.size());
+		
+		//BUILD FINAL MIS USING COLORS AND SPANNING TREE + GRAPH STRUCTURE
+		buildColorsMIS2(root);
+		
+		ArrayList<NodeVertexDS> result = new ArrayList<NodeVertexDS>();
+		for(NodeVertexDS v : graph) {
+			if(v.color.equals(Color.BLACK))
+				result.add(v);
+		}
+		return result;
+	}
+	
+	private static void buildColorsMIS2(NodeVertexDS root) {
+		//ROOT IS MARKED BLACK
+		root.color = Color.BLACK;
+		ArrayList<NodeVertexDS> fifoNodes = new ArrayList<NodeVertexDS>();
+		fifoNodes.add(root);
+		
+		//BREADTH-FIRST SEARCH
+		while(!fifoNodes.isEmpty()) {
+			NodeVertexDS node = fifoNodes.remove(0);
+			
+			boolean countedOneBlack = false;
+			for(NodeVertexDS n : node.neighbors) {
+				if(n.color == Color.BLACK) countedOneBlack = true;
+			}
+			if(countedOneBlack) {
+				//IF THE NODE HAVE A BLACK NEIGHBOR -> CHANGE IT COLOR TO GRAY
+				node.color = Color.GRAY;
+				fifoNodes.addAll(node.children);
+			} else {
+				//ELSE IF ALL THE NEIGHBORS OF THE NODE THAT ARE CLOSER TO THE ROOT (IN THE TREE) ARE GRAY
+				// -> CHANGE IT COLOR TO BLACK
+				boolean allParentGray = true;
+				for(NodeVertexDS n : node.neighbors) {
+					if(n.rank < node.rank && !n.color.equals(Color.GRAY)) allParentGray = false;
+				}
+				if(allParentGray) {
+					if(node.color.equals(Color.WHITE)) //TODO CHECK NOT NEEDED
+						node.color = Color.BLACK;
+					fifoNodes.addAll(node.children);
+				}
+			}
+		}
+	}
+
+	public ArrayList<NodeVertexDS> distributedMIS1(ArrayList<NodeVertexDS> points) {
+		ArrayList<NodeVertexDS> mis = new ArrayList<>();
+
+		ArrayList<NodeVertexDS> rest = (ArrayList<NodeVertexDS>) points.clone();
+		// active list
+		ArrayList<NodeVertexDS> activeWhite = new ArrayList<>();
+
+		NodeVertexDS leader = rest.get(0);
+		int d = leader.degree();
+		for (NodeVertexDS v : rest) {
+			if (v.equals(leader)) continue;
+			if (v.degree() > d) leader = v;
+		}
+
+		leader.isActive = true;
+
+		while (!rest.isEmpty()) {
+			// building active white collection
+			activeWhite.clear();
+			for (NodeVertexDS v : rest) {
+				if (v.misColor == Color.white && v.isActive) {
+					activeWhite.add(v);
+				}
+			}
+
+			// no more active white
+			if (activeWhite.size() == 0) break;
+
+			// getting dominator vertex
+			NodeVertexDS toBlack = activeWhite.get(0);
+			d = toBlack.getEffDeg();
+			for (NodeVertexDS v : activeWhite) {
+				if (v.equals(toBlack)) continue;
+				if (v.getEffDeg() > d) toBlack = v;
+			}
+			toBlack.misColor = Color.black;
+			rest.remove(toBlack);
+
+			// colouring all the white neighbors of black in gray
+			for (NodeVertexDS toGray : toBlack.neighbors)
+				if (toGray.misColor == Color.white) {
+					toGray.misColor = Color.gray;
+					//  setting white neighbours of gray nodes in active mode
+					for (NodeVertexDS toActive : toGray.neighbors) {
+						if (toActive.misColor == Color.white) {
+							toActive.isActive = true;
+						}
+					}
+					rest.remove(toGray);
+				}
+		}
+
+		// returning the actual mis
+		for (NodeVertexDS v : points) {
+			if (v.misColor == Color.black)
+				mis.add(v);
+		}
+		return mis;
+	}
+	
+	public static boolean isValid(ArrayList<Point> points, ArrayList<Point> pts, int edgeTreshold) {
+		
+		//REBUILD THE GRAPH STRUCTURE
+		ArrayList<NodeVertexDS> graphcds = new ArrayList<NodeVertexDS>();
+		boolean ret = true;
+		for (int i = 0; i < pts.size(); i++) {
+			NodeVertexDS v = new NodeVertexDS(pts.get(i), i);
+			graphcds.add(v);
+			v.makeDSElement();
+		}
+		for (NodeVertexDS v : graphcds) {
+			for (NodeVertexDS v2 : graphcds) {
+				if (v == v2)
+					continue;
+				if (v.p.distance(v2.p) < edgeTreshold) {
+					v.neighbors.add(v2);
+				}
+			}
+		}
+		
+		//BUILD CONNEX COMPONENTS
+		for(NodeVertexDS v : graphcds) {
+			for(NodeVertexDS vn : v.neighbors) {
+				v.disjointSetElem.union(vn.disjointSetElem);
+			}
+		}
+		
+		//ENUMERATE CONNEX COMPONENTS
+		HashSet<DisjointSetElement<NodeVertexDS>> compconnex = new HashSet<DisjointSetElement<NodeVertexDS>>();
+		for(NodeVertexDS v : graphcds) {
+			compconnex.add(v.disjointSetElem.find());
 		}
 		if(compconnex.size() > 1) {
 			System.err.println("Error connexity : " + compconnex.size());
 			ret = false;
 		}
 		
+		//CHECK DOMINATING (removing all neighbors of dominating set)
 		ArrayList<Point> rest = (ArrayList<Point>) points.clone();
 		rest.removeAll(pts);
 		
@@ -167,195 +304,17 @@ public class DefaultTeam {
 			System.err.println("Error dominating : " + rest.size());
 			ret = false;
 		}
-
+		
 		return ret;
 	}
-
-	public ArrayList<Point> calculConnectedDominatingSetV2(ArrayList<Point> points, int edgeTreshold) {
-		ArrayList<NodeVertexDS> graph = new ArrayList<NodeVertexDS>();
-
-		for (int i = 0; i < points.size(); i++) {
-			graph.add(new NodeVertexDS(points.get(i), i));
-		}
-		for (NodeVertexDS v : graph) {
-			for (NodeVertexDS v2 : graph) {
-				if (v == v2)
-					continue;
-				if (v.p.distance(v2.p) < edgeTreshold) {
-					v.neighbors.add(v2);
-				}
-			}
-		}
-		// START
-
-		// CALCUL MIS
-		ArrayList<NodeVertexDS> MIS = new ArrayList<NodeVertexDS>();
-
-		//MIS = distributedMIS(graph);
-		MIS = distributedMIS2(graph);
-//		System.out.println(isMIS(graph, MIS));
-		System.out.println("MIS size : " + MIS.size());
-
-		// BLACK COMPONENTS
-		for (VertexDS vi : MIS) {
-			vi.color = Color.BLACK;
-			vi.makeBBComp();
-		}
-
-		// GRAY NODES
-		ArrayList<NodeVertexDS> grayNodes = (ArrayList<NodeVertexDS>) graph.clone();
-		grayNodes.removeAll(MIS);
-
-		for (int i = 5; i >= 2; i--) {
-			boolean cont = true;
-			// System.out.println(i);
-			while (cont) {
-				int newblueId = -1;
-				for (int j = 0; j < grayNodes.size(); j++) {
-					NodeVertexDS vgray = grayNodes.get(j);
-					if (vgray.degree() < i)
-						continue;
-
-					ArrayList<NodeVertexDS> blackneighbors = new ArrayList<NodeVertexDS>();
-					for (NodeVertexDS vgraynei : vgray.neighbors)
-						if (vgraynei.color == Color.BLACK)
-							blackneighbors.add(vgraynei);
-					if (blackneighbors.size() < i)
-						continue;
-
-					ArrayList<DisjointSetElement<VertexDS>> neibbcompsroots = new ArrayList<DisjointSetElement<VertexDS>>();
-					for (VertexDS blackn : blackneighbors) {
-						neibbcompsroots.add(blackn.bbcomp.find());
-					}
-
-					// TODO utiliser directement les indices
-					HashSet<Integer> idsbbcomps = new HashSet<Integer>();
-					for (DisjointSetElement<VertexDS> rootneibbcomp : neibbcompsroots) {
-						idsbbcomps.add(rootneibbcomp.index);
-					}
-					if (idsbbcomps.size() < i)
-						continue;
-
-					vgray.color = Color.BLUE;
-					newblueId = j;
-					// TODO optimisable en utilisant rootneibbcomp
-					for (int id = 1; id < neibbcompsroots.size(); id++) {
-						blackneighbors.get(0).bbcomp.union(blackneighbors.get(id).bbcomp);
-					}
-					break;
-				}
-				if (newblueId != -1)
-					grayNodes.remove(newblueId);
-				else
-					cont = false;
-			}
-
-		}
-
-		ArrayList<Point> result = new ArrayList<Point>();
-		for (NodeVertexDS v : graph) {
-			if (v.color.equals(Color.BLUE))
-				result.add(v.p);
-			if (v.color.equals(Color.BLACK))
-				result.add(v.p);
-		}
-		return result;
-	}
 	
-	public ArrayList<Point> calculConnectedDominatingSetV1(ArrayList<Point> points, int edgeTreshold) {
-		ArrayList<VertexDS> graph = new ArrayList<VertexDS>();
-
-		for (int i = 0; i < points.size(); i++) {
-			graph.add(new VertexDS(points.get(i), i));
-		}
-		for (VertexDS v : graph) {
-			for (VertexDS v2 : graph) {
-				if (v == v2)
-					continue;
-				if (v.p.distance(v2.p) < edgeTreshold) {
-					v.neighbors.add(v2);
-				}
-			}
-		}
-		// START
-
-		// CALCUL MIS
-		ArrayList<VertexDS> MIS = new ArrayList<VertexDS>();
-
-		MIS = distributedMIS(graph);
-
-		// BLACK COMPONENTS
-		for (VertexDS vi : MIS) {
-			vi.color = Color.BLACK;
-			vi.makeBBComp();
-		}
-
-		// GRAY NODES
-		ArrayList<VertexDS> grayNodes = (ArrayList<VertexDS>) graph.clone();
-		grayNodes.removeAll(MIS);
-
-		for (int i = 5; i >= 2; i--) {
-			boolean cont = true;
-			while (cont) {
-				int newblueId = -1;
-				for (int j = 0; j < grayNodes.size(); j++) {
-					VertexDS vgray = grayNodes.get(j);
-					if (vgray.degree() < i)
-						continue;
-
-					ArrayList<VertexDS> blackneighbors = new ArrayList<VertexDS>();
-					for (VertexDS vgraynei : vgray.neighbors)
-						if (vgraynei.color == Color.BLACK)
-							blackneighbors.add(vgraynei);
-					if (blackneighbors.size() < i)
-						continue;
-
-					ArrayList<DisjointSetElement<VertexDS>> neibbcompsroots = new ArrayList<DisjointSetElement<VertexDS>>();
-					for (VertexDS blackn : blackneighbors) {
-						neibbcompsroots.add(blackn.bbcomp.find());
-					}
-
-					// TODO utiliser directement les indices
-					HashSet<Integer> idsbbcomps = new HashSet<Integer>();
-					for (DisjointSetElement<VertexDS> rootneibbcomp : neibbcompsroots) {
-						idsbbcomps.add(rootneibbcomp.index);
-					}
-					if (idsbbcomps.size() < i)
-						continue;
-
-					vgray.color = Color.BLUE;
-					newblueId = j;
-					// TODO optimisable en utilisant rootneibbcomp
-					for (int id = 1; id < neibbcompsroots.size(); id++) {
-						blackneighbors.get(0).bbcomp.union(blackneighbors.get(id).bbcomp);
-					}
-					break;
-				}
-				if (newblueId != -1)
-					grayNodes.remove(newblueId);
-				else
-					cont = false;
-			}
-
-		}
-
-		ArrayList<Point> result = new ArrayList<Point>();
-		for (VertexDS v : graph) {
-			if (v.color.equals(Color.BLUE))
-				result.add(v.p);
-			if (v.color.equals(Color.BLACK))
-				result.add(v.p);
-		}
-		return result;
-	}
-
 	
 	// verify mis is independent in points and all nodes in points are dominated
-	public boolean isMIS(ArrayList<VertexDS> points, ArrayList<VertexDS> mis) {
-		ArrayList<VertexDS> rest = (ArrayList<VertexDS>) points.clone();
+	public boolean isMIS(ArrayList<NodeVertexDS> points, ArrayList<NodeVertexDS> mis) {
+		ArrayList<NodeVertexDS> rest = (ArrayList<NodeVertexDS>) points.clone();
 		rest.removeAll(mis);
-		for (VertexDS u : mis) {
-			for (VertexDS v : mis) {
+		for (NodeVertexDS u : mis) {
+			for (NodeVertexDS v : mis) {
 				if (u.neighbors.contains(v))
 					return false;
 			}
@@ -366,104 +325,10 @@ public class DefaultTeam {
 		return false;
 	}
 	
-	public ArrayList<NodeVertexDS> distributedMIS2(ArrayList<NodeVertexDS> points) {
-		ArrayList<NodeVertexDS> graph = (ArrayList<NodeVertexDS>) points.clone();
-		for (int i = 0; i < graph.size(); i++) {
-			graph.get(i).makeBBComp();
-		}
-		
-		System.err.println("graph size : " + graph.size());
-		
-		//kruskal
-		for (NodeVertexDS v : graph) {
-			for(NodeVertexDS vn : v.neighbors) {
-				if(!v.bbcomp.find().equals(vn.bbcomp.find())) {
-					v.neighborsTree.add(vn);
-					vn.neighborsTree.add(v);
-					v.bbcomp.union(vn.bbcomp);
-				}
-			}
-		}
-		
-		//chose arbitrary root node
-		NodeVertexDS root = graph.get(0);
-		root.initiateRank(0);
-		root.checkRoot();
-		System.err.println("tree vs points " + root.count + " " + points.size());
-		NodeVertexDS.buildMIS(root);
-		
-		ArrayList<NodeVertexDS> result = new ArrayList<NodeVertexDS>();
-		for(NodeVertexDS v : graph) {
-			if(v.color.equals(Color.BLACK))
-				result.add(v);
-		}
-		return result;
-	}
-
-	public ArrayList<VertexDS> distributedMIS(ArrayList<VertexDS> points) {
-		ArrayList<VertexDS> mis = new ArrayList<>();
-
-		ArrayList<VertexDS> rest = (ArrayList<VertexDS>) points.clone();
-		// active list
-		ArrayList<VertexDS> activeWhite = new ArrayList<>();
-
-		VertexDS leader = rest.get(0);
-		int d = leader.degree();
-		for (VertexDS v : rest) {
-			if (v.equals(leader)) continue;
-			if (v.degree() > d) leader = v;
-		}
-
-		leader.isActive = true;
-
-		while (!rest.isEmpty()) {
-			// building active white collection
-			activeWhite.clear();
-			for (VertexDS v : rest) {
-				if (v.misColor == Color.white && v.isActive) {
-					activeWhite.add(v);
-				}
-			}
-
-			// no more active white
-			if (activeWhite.size() == 0) break;
-
-			// getting dominator vertex
-			VertexDS toBlack = activeWhite.get(0);
-			d = toBlack.getEffDeg();
-			for (VertexDS v : activeWhite) {
-				if (v.equals(toBlack)) continue;
-				if (v.getEffDeg() > d) toBlack = v;
-			}
-			toBlack.misColor = Color.black;
-			rest.remove(toBlack);
-
-			// colouring all the white neighbors of black in gray
-			for (VertexDS toGray : toBlack.neighbors)
-				if (toGray.misColor == Color.white) {
-					toGray.misColor = Color.gray;
-					//  setting white neighbours of gray nodes in active mode
-					for (VertexDS toActive : toGray.neighbors) {
-						if (toActive.misColor == Color.white) {
-							toActive.isActive = true;
-						}
-					}
-					rest.remove(toGray);
-				}
-		}
-
-		// returning the actual mis
-		for (VertexDS v : points) {
-			if (v.misColor == Color.black)
-				mis.add(v);
-		}
-		return mis;
-	}
-	
 	////////////////////////////////////////////////////////////:////////////////////////////////////////
 	
 	// FILE PRINTER
-		private void saveToFile(String filename, ArrayList<Point> result) {
+		public void saveToFile(String filename, ArrayList<Point> result) {
 			int index = 0;
 			try {
 				while (true) {
@@ -482,7 +347,7 @@ public class DefaultTeam {
 			}
 		}
 
-		private void printToFile(String filename, ArrayList<Point> points) {
+		public void printToFile(String filename, ArrayList<Point> points) {
 			try {
 				PrintStream output = new PrintStream(new FileOutputStream(filename));
 				int x, y;
@@ -495,7 +360,7 @@ public class DefaultTeam {
 		}
 
 		// FILE LOADER
-		private ArrayList<Point> readFromFile(String filename) {
+		public ArrayList<Point> readFromFile(String filename) {
 			String line;
 			String[] coordinates;
 			ArrayList<Point> points = new ArrayList<Point>();

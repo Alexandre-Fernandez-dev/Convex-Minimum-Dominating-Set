@@ -1,4 +1,5 @@
 package algorithms;
+
 public class DisjointSetElement<T> {
 	private static int genindex = 0;
 	private T data;
@@ -25,6 +26,7 @@ public class DisjointSetElement<T> {
 		this.parent = newp;
 	}
 
+	//OPTIMISATION : PATH COMPRESSION
 	public DisjointSetElement<T> find() {
 		if(this.parent != this) {
 			this.parent = this.parent.find();
@@ -32,24 +34,11 @@ public class DisjointSetElement<T> {
 		return this.parent;
 	}
 	
+	//OPTIMISATION : UNION BY RANK
 	public void union(DisjointSetElement<T> el2) {
 		DisjointSetElement<T> xroot = this.find();
 		DisjointSetElement<T> yroot = el2.find();
 		
-		if(xroot == yroot) return;
-		
-		if(xroot.rank < yroot.rank)
-			xroot.parent = yroot;
-		else if(xroot.rank > yroot.rank)
-			yroot.parent = xroot;
-		else {
-			yroot.parent = xroot;
-			xroot.rank++;
-		}
-	}
-	
-	
-	public static void unionRoot(DisjointSetElement xroot, DisjointSetElement yroot) {
 		if(xroot == yroot) return;
 		
 		if(xroot.rank < yroot.rank)

@@ -6,22 +6,48 @@ import java.util.ArrayList;
 
 import javax.swing.GrayFilter;
 
-public class NodeVertexDS extends VertexDS {
+/**
+ * This class represents a vertex with his neighbors in a graph
+ * AND a node of a spanning tree built upon the graph structure.
+ * 'neighbors' contains the neighbors of this vertex in the graph.
+ * 
+ * Some of his field holds a Tree Data Structure for the MIS algorithm using a spanning tree (MIS 2).
+ * 'neigborsTree' are the neighbors of this vertex in the graph that are his children or his parent in the tree,
+ * 'neigborTree' is split between 'parent' and 'children' in the process
+ * @author alexandre
+ *
+ */
+public class NodeVertexDS {
 	
-	public static int count = 0;//REMOVE TESTS
+	public static int count = 0;//TESTS
 	
+	public ArrayList<NodeVertexDS> neighbors = new ArrayList<NodeVertexDS>();
+	public Point p;
+	public int id;
+	public Color color = Color.gray;
+	public DisjointSetElement<NodeVertexDS> disjointSetElem;
+	
+	//UTILISES POUR LA VERSION 2 DU MIS (STRUCTURE D'ARBRE)
+	public int rank = Integer.MAX_VALUE;
 	public ArrayList<NodeVertexDS> neighborsTree = new ArrayList<NodeVertexDS>();
 	public ArrayList<NodeVertexDS> children = new ArrayList<NodeVertexDS>();
 	public NodeVertexDS parent = null;
 	
-	public ArrayList<NodeVertexDS> neighbors = new ArrayList<NodeVertexDS>();
-	private int rank = Integer.MAX_VALUE;
+	//UTILISES POUR LA VERSION 1 DU MIS
+	public Color misColor = Color.white;
+	public boolean isActive = false;
+	
 	
 	public NodeVertexDS(Point p, int id) {
-		super(p, id);
+		this.p = p;
+		this.id = id;
 		this.color = Color.WHITE;
 	}
 	
+	public void makeDSElement() {
+		this.disjointSetElem = new DisjointSetElement<NodeVertexDS>(this);
+	}
+
 	public int degree() {
 		return neighbors.size();
 	}
@@ -40,34 +66,17 @@ public class NodeVertexDS extends VertexDS {
 		}
 	}
 	
-	public static void buildMIS(NodeVertexDS root) {
-		root.color = Color.BLACK;
-		ArrayList<NodeVertexDS> fifoNodes = new ArrayList<NodeVertexDS>();
-		fifoNodes.add(root);
-		while(!fifoNodes.isEmpty()) {
-			NodeVertexDS node = fifoNodes.remove(0);
-			
-			boolean countedOneBlack = false;
-			for(NodeVertexDS n : node.neighbors) {
-				if(n.color == Color.BLACK) countedOneBlack = true;
-			}
-			if(countedOneBlack) {
-				node.color = Color.GRAY;
-				fifoNodes.addAll(node.children);
-			} else {
-				boolean allParentGray = true;
-				for(NodeVertexDS n : node.neighbors) {
-					if(n.rank < node.rank && !n.color.equals(Color.GRAY)) allParentGray = false;
-				}
-				if(allParentGray) {
-					if(node.color.equals(Color.WHITE))
-						node.color = Color.BLACK;
-					fifoNodes.addAll(node.children);
-				}
-			}
-		}
+	//UTILISE POUR LA VERSION 1 DU MIS
+	public int getEffDeg() {
+	    int i = 0;
+	    for (NodeVertexDS v : this.neighbors)
+		if (v.misColor == color.white)
+		    i++;
+	    return i;
 	}
 	
+	
+	//TESTS MIS V2
 	public void checkRoot() {
 		this.count = 0;
 		assert(this.parent == null);
