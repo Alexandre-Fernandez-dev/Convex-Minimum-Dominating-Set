@@ -117,9 +117,7 @@ public class DefaultTeam {
 		for (int i = 0; i < graph.size(); i++) {
 			graph.get(i).makeDSElement();
 		}
-		
-		System.err.println("graph size : " + graph.size());
-		
+				
 		//BUILD A SPANNING TREE (KRUSKAL USING DISJOINT SET AND WITHOUT CARE OF EDGE LENGTH)
 		for (NodeVertexDS v : graph) {
 			for(NodeVertexDS vn : v.neighbors) {
@@ -139,9 +137,7 @@ public class DefaultTeam {
 		root.initiateRank(0);
 		
 		//root.checkRoot(); TEST
-		
-		System.err.println("tree vs points " + root.count + " " + points.size());
-		
+				
 		//BUILD FINAL MIS USING COLORS AND SPANNING TREE + GRAPH STRUCTURE
 		buildColorsMIS2(root);
 		
