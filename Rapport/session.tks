@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TexmakerSession quickmode="3">
-    <document bookmark2="0" bookmark1="0" master="true" line="18" bookmark3="0" hasfocus="true" file="E:\eclipse\workspace\SMIS\Rapport\rapport.tex"/>
-    <document bookmark2="0" bookmark1="0" master="false" line="20" bookmark3="0" hasfocus="false" file="E:/eclipse/workspace/SMIS/Rapport/preamble/preamble.tex"/>
-    <document bookmark2="0" bookmark1="0" master="false" line="0" bookmark3="0" hasfocus="false" file="E:/eclipse/workspace/SMIS/Rapport/couverture/couverture.tex"/>
+    <document bookmark3="0" line="0" master="true" bookmark2="0" file="E:/AAGA/Convex-Minimum-Dominating-Set/Rapport/rapport.tex" bookmark1="0" hasfocus="true"/>
 </TexmakerSession>

@@ -1,13 +1,17 @@
 \section{Introduction}
-Etant donné un ensemble $\mathcal{S}$ de $n$ points sur $\mathbb R^2$, le rectangle minimum $\mathcal{R}$ est le plus petit rectangle orienté tel que $\forall p \in \mathcal{S}, p \in \mathcal{R}$. Il est évident que l'enveloppe convexe de $\mathcal{S}$ est contenu dans le rectangle minimum, on rappelle que l'enveloppe convexe $\mathcal{E}$ d'un ensemble de points  est le plus petit ensemble convexe qui contient ces points.
+Étant donné un graphe $G=(V, E)$ avec $V$ (respectivement $E$) l'ensemble des sommets (respectivement l'ensemble des arêtes), l'ensemble dominant connexe\footnote{CDS (Connected Dominating Set)} de $G$ est le sous-ensemble $D \subseteq V$ tel que $\forall v \in V, v \in D \lor v$ est un voisin d'un élément de $D$ et tel que $G[D]$, le sous-graphe induit par $D$ est connexe.
 
-Ainsi, l'algorithme de Toussaint pour obtenir le rectangle minimum d'un nuage de points démarre ses calculs à partir d'une enveloppe convexe qu'on aura calculée au préalable. Pour ce faire, il existe plusieurs algorithmes permettant d'obtenir l'enveloppe convexe d'un nuage de points dont les complexités varient selon le cas de figure :
-\begin{itemize}
-\item Parcours de Graham : $\mathcal{O}(n\log n)$
-\item Marche de Jarvis : $\mathcal{O}(nm)$ avec $m$ le nombre de sommets de l'enveloppe convexe ou $\mathcal{O}(n^2)$ dans le pire cas
-\item Quickhull : $\mathcal{O}(n\log n)$ ou $\mathcal{O}(n^2)$ dans le pire cas mais en pratique cet algorithme est très efficace et la plus utilisée
-\end{itemize}
+Cette définition nous indique que le CDS n'est pas unique pour un graphe donné (sauf cas dégénérés) et qu'il en existe plusieurs de tailles différentes. Cela nous amène au problème que nous allons traiter : la recherche du plus petit CDS. C'est un problème NP-difficile ce qui signifie que nous ne pourrons pas calculer le plus petit, autrement dit la meilleure solution, en un temps raisonnable. C'est pour cela que nous allons présenter dans ce rapport un algorithme donnant une solution qui s'en rapproche. 
 
-Dans notre démarche, nous nous servirons du parcours de Graham pour calculer l'enveloppe convexe avant d'appliquer l'algorithme de Toussaint à proprement dit. Dans un deuxième temps, nous renouvellerons l'expérience avec l'algorithme de Ritter calculant le cercle minimum. Les résultats obtenus seront ensuite analysés pour déterminer la qualité en tant que conteneur de ces 2 algorithmes, les détails de l'étude seront montrés dans la partie \ref{efficacite} de ce rapport.
+\paragraph{}
+Ainsi, l'algorithme Li et al. propose une approche gloutonne à la résolution de ce problème dont le principe de résolution se fait étape par étape. En effet, à chaque étape un optimum local est choisi afin d'arriver à un optimum global à la fin.
+Cet algorithme peut être décomposé en 2 grandes étapes :
+\begin{enumerate}
+\item Construire l'ensemble stable maximal\footnote{MIS (Maximum Independent Set), nous en donnerons la définition dans la section \ref{mis}}
+\item Connecter les points de l'ensemble précédemment construit entre eux par des points qui n'y appartiennent pas, ceux-ci sont appelés \textit{n\oe uds de Steiner}
+\end{enumerate}
 
-Enfin, nous nous poserons la question de la validité de ces algorithmes sur un espace de dimension 3.
+\paragraph{}
+Dans notre démarche, nous présenterons tout d'abord les idées théoriques qui se trouvent derrière l'algorithme puis nous détaillerons l'implémentation que nous en avons fait, éventuellement des choix et des modifications pris par rapport l'algorithme original. Ensuite, nous présenterons les conditions et résultats des tests obtenus suivi d'une discussion sur la pertinence d'un tel algorithme.
+
+Enfin, nous conclurons sur les enjeux et problématiques de l'ensemble dominant connexe dans les graphes géométriques, également appelés graphes de disques.
