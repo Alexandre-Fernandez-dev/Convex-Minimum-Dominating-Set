@@ -1,1 +1,192 @@
 \subsection{Construction de l'ensemble dominant connexe}
+\paragraph{}
+L'algorithme Li et al. commence par obtenir un MIS respectant les lemmes 1 et 2 ci dessous et construit un CDS.
+
+\begin{lemma}
+In any unit disk graph, the size of every
+maximal independent set is upper-bounded by
+3.8opt + 1.2 where opt is the size of the minimum
+connected dominating set in this unit disk graph.
+\end{lemma}
+\begin{lemma}
+Any pair of complementary subsets of the
+MIS have a distance of exactly two hops.
+\end{lemma}
+
+\paragraph{}
+Le lemme 1 garantit que le ratio de la solution de cet algorithme par rapport à la solution optimale est bien 4.8 + ln5. La validité de ce lemme dépends beaucoup de nos choix d'implémentation pour les algorithmes de construction MIS. Ces algorithmes étant prévus pour fonctionner de façon distribuée, nos implémentations, non distribuées, ne se comporte donc pas exactement comme ceux-ci.
+
+Le lemme 2 est d'une importance majeure pour la validité de la solution. En effet, si une paire de sous-ensemble complémentaires du MIS ont une distance de moins de deux sauts, le MIS sera plus grand qu'escompté. On risque donc dans ce cas d'obtenir un résultat final plus grand.
+A l'inverse, si la distance entre deux sous ensembles complémentaires du MIS est de plus de deux sauts. L'algorithme, essayant de relier ces sous-ensemble du MIS en colorant des nœuds contenant au minimum un voisin dans chacun de ces sous ensembles, ne pourra pas relier ces deux sous ensemble. L'ensemble obtenu sera constitué d'au moins 2 composantes connexes correspondant au deux ensembles complémentaires du MIS ayant une distance de plus de deux sauts.
+
+\paragraph{}
+Algorithme du CDS :
+\begin{lstlisting}
+compute a MIS satisfying lemmas 1 and 2.
+color MIS nodes to black.
+color other nodes to grey.
+for i = 5; 4; 3; 2 do
+	while there exists a grey node
+		adjacent to at least i black
+		nodes in different black-blue
+		components
+	do change its color from grey to
+		blue;
+return all blue nodes.
+\end{lstlisting}
+
+\paragraph{}
+La principale difficulté au niveau de l'implémentation de l'algorithme est au sujet des \textit{black-blue components}. Il faut rapidement identifier à quel \textit{black-blue component} appartient un point noir.
+De plus quand un nouveau point bleu est choisi, il provoque la fusion de tout ses \textit{black-blue components} voisins.
+La fusion de \textit{black-blue components} \textit{(BBC)} peut être coûteuse en fonction de l'implémentation.
+Une implémentation naïve consisterait à utiliser un ensemble de listes pour représenter les \textit{BBC}, chaque liste contenant les points appartenant à un \textit{BBC}.
+Considérons le cas au pire cas de toutes les opérations fusions de \textit{BBC}.
+
+\paragraph{}
+Considérons le cas dégénéré d'un chemin de points de degré 2.
+Dans ce cas, chaque point gris, a exactement deux voisins noirs.
+Pour chaque point gris, on va réaliser une unique fusion (ie : fusionner uniquement 2 \textit{BBC} ).
+Si l'on considère, pour simplifier l'analyse que l'ordre de choix des points gris est tel que on va toujours fusionner un même \textit{BBC} avec un \textit{BBC} ne contenant qu'un seul point, dans le cas pire, on vide toujours la liste la plus grande dans la liste ne faisant qu'un en taille. On obtient le nombre d'opération ci dessous :
+
+\paragraph{}
+1 + 2 + 3 + 4 + ... + n = \( \displaystyle \frac{n(n+1)}{2} \)
+
+avec n=taille(MIS)
+
+On obtiens un coût en O($n{^2}$) pour les fusions.
+
+\paragraph{}
+Pour les recherches, on va faire un parcours de tout les BBC pour y trouver les voisins d'un point gris, ce qui, au pire cas où il faut parcourir tout les BBC pour y trouver les voisins, sachant que l'ensemble des points dans les BBC corresponds à la taille du MIS, on obtiens le nombre de comparaisons suivant :
+
+\paragraph{}
+\(n \times m\)
+
+avec n=taille(MIS) et m=taille(ptsGris), taille(ptsGris) = taille(points) - taille(MIS).
+
+\paragraph{}
+Ces deux opérations sont grossièrement au pire cas quadratiques et il convient de les optimiser. Pour cela, nous allons utiliser une structure de Disjoint-Set pour réaliser des opérations UNION et FIND pour représenter les BBC.
+
+Cette structure organise différents ensembles disjoints sous la forme d'une forêt d'arbres dont les noeuds pointent sur leur parents. Au début tout les BBC sont initialisés a un point noir et sont disjoints. Puis, lorsque l'on veut faire l'union de deux BBC, on cherche leur racines et si elles sont différentes, un parent commun est créé pour les deux racines : opération UNION.
+
+Lorsque l'on veut vérifier si deux points noirs appartiennent au même BBC, il suffit de remonter leurs parents jusqu'à la racine. Si deux points ont la même racine alors ils sont dans le même ensemble.
+Au pire cas, avec une implémentation naïve des Disjoint Set, les arbres peuvent prendre la forme d'un peigne et le coût au pire cas des opérations est O(n). Ce qui nous ramènerait a des complexités quadratiques pour la recherche et la fusion au cours de tout l'algorithme.
+
+\paragraph{}
+Cependant, deux optimisations simples sont très efficaces avec les UNION-FIND :
+
+- la path compression : lors d'une opération recherche, on remonte les éléments traversés comme fils de la racine.
+
+- l'union par rang : lors d'une fusion, si les deux arbres on la même taille, on créé une nouvelle racine, commune, pour ces deux arbre, cependant quand un arbre est moins haut que l'autre, on peut seulement ajouter comme parent de la racine de l'arbre le moins haut, la racine de l'arbre le plus haut.
+
+Avec ces deux optimisations le coût amortis des deux opérations est O(a(n)) avec a l'inverse de la fonction d'Ackermann, une fonction ayant une croissance si lente qu'on peut la considérer comme une constante inférieure à 5 pour quelconque situation.
+
+Il est justifié de parler de coût amortit dans notre cas, car on réalisera toujours des opérations find (réalisant la path compression) pour trouver les black blue components différents voisins d'un point gris, avec de réaliser des opérations union pour fusionner tout les bbc voisins d'un point nouvellement bleu.
+
+\paragraph{}
+MakeSet créé des sets singletons pour l'initialisation :
+\begin{lstlisting}
+ function MakeSet(x)
+   if x is not already present:
+     add x to the disjoint-set tree
+     x.parent := x
+     x.rank   := 0
+\end{lstlisting}
+
+Find implémente la recherche de la racine avec la path compression :
+\begin{lstlisting}
+ function Find(x)
+   if x.parent != x
+     x.parent := Find(x.parent)
+   return x.parent
+\end{lstlisting}
+
+Union fait l'union par rang
+\begin{lstlisting}
+ function Union(x, y)
+   xRoot := Find(x)
+   yRoot := Find(y)
+ 
+   // x and y are already in the same set
+   if xRoot == yRoot            
+       return
+   
+   // x and y are not in same set, so we merge them
+   if xRoot.rank < yRoot.rank
+     xRoot.parent := yRoot
+   else if xRoot.rank > yRoot.rank
+     yRoot.parent := xRoot
+   else
+     //Arbitrarily make one root the new parent
+     yRoot.parent := xRoot    
+     xRoot.rank   := xRoot.rank + 1
+\end{lstlisting}
+
+\paragraph{}
+L'utilisation des Disjoint Set a d'autres avantages, l'algorithme est beaucoup plus simple a écrire une fois cette structure implémentée.
+
+De plus cette structure permet facilement de vérifier la connexité d'un graphe. Elle nous sera donc utile pour implémenter la fonction de vérification isValid et pour générer des graphes géométriques connexes.
+
+\paragraph{}
+Nos structures :
+\begin{lstlisting}
+class NodeVertexDS {
+	Point p;
+	Color c;
+	
+	ArrayList<NodeVertexDS> neighbors;
+	DisjointSetElement<NodeVertexDS> disjointsetelement;
+	
+	//d'autres attributs sont utilises pour definir la structure d'arbre necessaire pour l'algorithme du MIS 2
+	//d'autres attributs sont utilises pour l'algorithme du MIS 1
+}
+
+class DisjointSetElement<T> {
+	int index; //unique index
+	T data;
+	DisjointSetElement<T> parent;
+	int rank;
+	
+	//toutes les methodes pour implementer les disjoint set : en particulier find et union
+}
+\end{lstlisting}
+
+\paragraph{}
+Pseudo-code de notre implémentation :
+
+\begin{lstlisting}
+//construire la structure du graphe avec la liste de points en entree et edgeTreshold
+graph : ArrayList<NodeVertexDS> = makeGraph(points);
+MIS : ArrayList<NodeVertexDS> = calculMIS(graph);
+grayNodes : ArrayList<NodeVertexDS = { graph } \ { MIS }
+
+for(n : MIS) { n.color = BLACK; n.disjointsetelement = new DisjointSetElement<NodeVertexDS>(n); }
+
+for( i from 5 to 2 ) {
+	cont = true;
+	while(cont) {
+		newblue = null;
+		for( gray in grayNodes ) {
+			if( gray.degree() < i ) continue;
+			
+			//assuming BlkNeighbors returns the black neighbors of a node
+			blackneighbors : ArrayList<NodeVertexDS> = BlkNeighbors(gray);
+			if( blackneighbors.size() < i ) continue;
+			
+			//assuming map is the functional transformation on list
+			rootsblackneighbors : ArrayList<DisjointElement> = List.map( blackneighbors, (x) => x.disjointsetelement.find() )
+			
+			int nbDifferentBBC = new HashSet(rootsblackneighbors).size();
+			if( nbDifferentBBC < i ) continue;
+			
+			gray.color = BLUE;
+			newblue = GRAY;
+			
+			for( i from 1 to rootblackneighbors.size() -1) rootblackneighbors[i].union(rootblackneighbors[0]);
+			break;
+		}
+		if ( newblue != null ) grayNodes.remove(newblue);
+		else cont = false;
+	}
+}
+return BLACK and BLUE nodes;
+\end{lstlisting}

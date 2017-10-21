@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class DefaultTeam {
 	public static int useMIS = 1;
@@ -73,6 +74,7 @@ public class DefaultTeam {
 					
 					//FIND ROOT NODE INDISJOINT SET OF ALL BLACK NEIGHBORS
 					ArrayList<DisjointSetElement<NodeVertexDS>> neiBBcompsroots = new ArrayList<DisjointSetElement<NodeVertexDS>>();
+
 					for (NodeVertexDS blackn : blackneighbors) {
 						neiBBcompsroots.add(blackn.disjointSetElem.find());
 					}
