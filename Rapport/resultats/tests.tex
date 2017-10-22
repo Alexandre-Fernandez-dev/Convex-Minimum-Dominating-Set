@@ -7,6 +7,7 @@ Pour tester notre algorithme nous avons eu besoin de deux choses :
 \item un fonction permettant de générer aléatoirement des tests
 \end{itemize}
 
+\paragraph{}
 La méthode \verb?isValid()? qui vérifie la validité de la solution calculée par notre algorithme est donnée par le pseudo-code suivant :
 \begin{lstlisting}
 isValid(ArrayList<Point> graph, ArrayList<Points> cds, int edgeTreshold) {
@@ -52,34 +53,119 @@ generateGraph(width, heigth, nb, edgeTreshold) :
 \end{lstlisting}
 
 \paragraph{}
-Nous avons ensuite établi plusieurs bases de test
+Nous avons ensuite établi plusieurs bases de test :
 
-(S'il te plait sylvain fait des tableaux :p)
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{|*{3}{c|}}
+    \hline
+     Nombre de points  & Largeur $\times$ Hauteur  & Seuil \\
+    \hline
+    100  & 1000 $\times$ 1000 & 50 \\
+    \hline
+    500  & 1000 $\times$ 1000  & 50 \\
+    \hline
+    1000  & 1000 $\times$ 1000  & 50 \\
+    \hline
+    5000  & 1000 $\times$ 1000  & 50 \\
+    \hline
+    10000  & 1000 $\times$ 1000  & 50 \\
+    \hline
+\end{tabular}
+\end{center}
+\captionof{table}{Base de test 1}
+\end{figure}
 
-Base 1 :
-nb points : 100, 500, 1000, 5000, 10000
-width and height : 1000, 1000, 1000, 1000, 1000
-edgeTreshold : 50, 50, 50, 50, 50
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{|*{3}{c|}}
+    \hline
+     Nombre de points  & Largeur $\times$ Hauteur  & Seuil \\
+    \hline
+    100  & 1000 $\times$ 1000 & 5 \\
+    \hline
+    500  & 500 $\times$ 500  & 25 \\
+    \hline
+    1000  & 1000 $\times$ 1000  & 50 \\
+    \hline
+    5000  & 5000 $\times$ 5000  & 250 \\
+    \hline
+    10000  & 10000 $\times$ 10000  & 500 \\
+    \hline
+\end{tabular}
+\end{center}
+\captionof{table}{Base de test 2}
+\end{figure}
 
-Base 2 :
-nb points : 100, 500, 1000, 5000, 10000
-width and height : 100, 500, 1000, 5000, 10000
-edgeTreshold : 5, 25, 50, 250, 500
+\begin{figure}[ht]
+\begin{center}
+\begin{tabular}{|*{3}{c|}}
+    \hline
+     Nombre de points  & Largeur $\times$ Hauteur  & Seuil \\
+    \hline
+    100  & 100 $\times$ 100 & 25 \\
+    \hline
+    500  & 500 $\times$ 500  & 36 \\
+    \hline
+    1000  & 1000 $\times$ 1000  & 50 \\
+    \hline
+    5000  & 5000 $\times$ 5000  & 161 \\
+    \hline
+    10000  & 10000 $\times$ 10000  & 300 \\
+    \hline
+\end{tabular}
+\end{center}
+\captionof{table}{Base de test 3}
+\end{figure}
 
 Base 3 : (pour cette base on souhaitait fixer edgeTreshold, cependant, un edgeTreshold de 50 pour un test de 10000 points dans un espace de 10000*10000 est trop long a générer) à la place nous avont choisi un compromis.
-soit edeTreshold = (1/36)*nbPoints + 200/9
-nb points : 100, 500, 1000, 5000, 10000
-width and height : 100, 500, 1000, 5000, 10000
-edgeTreshold : 25, 36, 50, 161, 300
 
 Une base 4 qui génère des points dans un espace beaucoup plus large que haut serait intéressante (a voir demain).
 
 Tout ces tests seront effectués sur les deux version de l'algorithme (avec MIS1 et MIS2)
 
 \paragraph{}
-
 Résultats faire des graphes de taille du cds en fonction du nb de points et de temps en fonction du nombre de points pour MIS 1 et 2
 4 graphes par bases (essayer de faire petit)
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[%
+  xlabel=Nombre de points,
+  ylabel=Taille du CDS,
+  xmin=0,
+]
+  \addplot[color=red,mark=x]  coordinates {
+	(100, 35)
+	(500, 169)
+	(1000, 352)
+	(5000, 377)
+	(10000, 386)
+};
+  \addlegendentry{Base 1}
+  \addplot[color=blue,mark=x]  coordinates {
+	(100, 36)
+	(500, 173)
+	(1000, 351)
+	(5000, 377)
+	(10000, 384)
+};
+  \addlegendentry{Base 2}
+  \addplot[color=green,mark=x] coordinates {
+  	(100, 16)
+	(500, 172)
+	(1000, 352)
+	(5000, 873)
+	(10000, 1014)
+};
+  \addlegendentry{Base 3}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\captionof{figure}{Taille du CDS en fonction du nombre de points avec MIS1}
+\end{figure}
+
 BASE 1 ( 1 et 2 correspondent au MIS)
 1 - 1 - 100 points - Average size : 35 points - Average time : 0.00129 s - Fails : 0
 1 - 2 - 100 points - Average size : 37 points - Average time : 9.1E-4 s - Fails : 0

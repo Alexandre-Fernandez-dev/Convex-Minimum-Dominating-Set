@@ -67,3 +67,6 @@ Pour illustrer le fonctionnement de notre algorithme basé sur \cite{cardei2002c
 
 \newpage
 L'algorithme commence par choisir un tout premier nœud comme leader, en l'occurrence nous avons fait le choix de prendre le sommet de plus haut degré ce qui semble être pour nous un choix justifié puisque une plus large zone du graphe peut être couvert par ce seul point (figure \ref{mis2}). Ce nœud hôte est ainsi coloré en noir pour marqué son appartenance au MIS et tous ses voisins en gris pour indiquer leur domination par ce dernier. On liste ensuite les voisins des tous les nœud gris et les marque comme \textit{actifs} ceci afin de choisir un nouveau nœud dominant (figure \ref{mis3}). Le prochain nœud à marqué en noir choisi parmi cette liste de \textit{blancs actifs}, celui qui possède le plus grand nombre de voisins blancs \textit{non actifs} devient dominateur (figure \ref{mis4}). Le reste de la liste des \textit{blancs actifs} est maintenu et mis à jour dans la suite de l'algorithme. Puisqu'un nouveau nœud noir a été choisi, on peut répéter l'algorithme jusqu'à avoir marqué tous les nœud ou que la liste des \textit{blancs actifs} soit vide (figure \ref{mis5}). Enfin, il reste plus qu'à renvoyer la liste de tous les nœuds en noir pour renvoyer l'ensemble des points qui compose le MIS (figure \ref{mis6}).
+
+\paragraph{}
+Complexité...
