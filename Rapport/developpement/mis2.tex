@@ -1,4 +1,4 @@
-\subsection{Construction de l'ensemble stable maximal}\label{mis}
+\subsection{Construction de l'ensemble stable maximal : 2\up{ème} méthode}
 Un autre algorithme pour le MIS a été proposée par les auteurs. C'est un algorithme distribué qui se résume en les étapes suivantes.
 \begin{itemize}
 \item Construire un arbre couvrant quelconque du graphe. (par le biais de messages)
@@ -8,6 +8,13 @@ Un autre algorithme pour le MIS a été proposée par les auteurs. C'est un algo
 \item Lorsqu'un point reçoit un message gris, il vérifie si le message gris viens d'un point au dessus de lui (de rang inférieur) dans l'arbre, dans ce cas il décrémente un compteur k (initialisé a son nombre de voisins dans le graphe de rang inférieur dans l'arbre). Lorsque ce compteur arrive à zéro il deviens noir et broadcast un message noir.
 \item Des envois de messages supplémentaires permettent à l'algorithme distribué de notifier la racine de la fin de la procédure. Ils ne nous intéresseront pas.
 \end{itemize}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{images/figureMIS.jpg}
+\caption{Construction du MIS}
+\end{center}
+\end{figure}
 
 \paragraph{}
 Notre implémentation consiste a traduire cet algorithme distribué en un algorithme classique :

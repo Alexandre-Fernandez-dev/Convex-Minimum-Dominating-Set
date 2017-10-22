@@ -135,6 +135,7 @@ Résultats faire des graphes de taille du cds en fonction du nb de points et de 
   xlabel=Nombre de points,
   ylabel=Taille du CDS,
   xmin=0,
+  legend style={at={(1,0.5)},anchor=west},
 ]
   \addplot[color=red,mark=x]  coordinates {
 	(100, 35)
@@ -166,38 +167,119 @@ Résultats faire des graphes de taille du cds en fonction du nb de points et de 
 \captionof{figure}{Taille du CDS en fonction du nombre de points avec MIS1}
 \end{figure}
 
-BASE 1 ( 1 et 2 correspondent au MIS)
-1 - 1 - 100 points - Average size : 35 points - Average time : 0.00129 s - Fails : 0
-1 - 2 - 100 points - Average size : 37 points - Average time : 9.1E-4 s - Fails : 0
-1 - 1 - 500 points - Average size : 169 points - Average time : 0.0046 s - Fails : 0
-1 - 2 - 500 points - Average size : 174 points - Average time : 0.00425 s - Fails : 0
-1 - 1 - 1000 points - Average size : 352 points - Average time : 0.01495 s - Fails : 0
-1 - 2 - 1000 points - Average size : 364 points - Average time : 0.01403 s - Fails : 0
-1 - 1 - 5000 points - Average size : 377 points - Average time : 0.29473 s - Fails : 0
-1 - 2 - 5000 points - Average size : 394 points - Average time : 0.25969 s - Fails : 0
-1 - 1 - 10000 points - Average size : 386 points - Average time : 1.16013 s - Fails : 0
-1 - 2 - 10000 points - Average size : 402 points - Average time : 1.01815 s - Fails : 0
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\begin{axis}[%
+  xlabel=Nombre de points,
+  ylabel=Temps d'exécution (secondes),
+  xmin=0,
+  legend style={at={(1,0.5)},anchor=west},
+]
+  \addplot[color=red,mark=x]  coordinates {
+	(100, 0.00129)
+	(500, 0.0046)
+	(1000, 0.01495)
+	(5000, 0.29473)
+	(10000, 1.16013)
+};
+  \addlegendentry{Base 1}
+  \addplot[color=blue,mark=x]  coordinates {
+	(100, 2.0E-4)
+	(500, 0.00398)
+	(1000, 0.0149)
+	(5000, 0.29543)
+	(10000, 1.15217)
+};
+  \addlegendentry{Base 2}
+  \addplot[color=green,mark=x] coordinates {
+  	(100, 2.9E-4)
+	(500, 0.0039)
+	(1000, 0.01476)
+	(5000, 0.32062)
+	(10000, 1.20708)
+};
+  \addlegendentry{Base 3}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\captionof{figure}{Temps d'exécution en fonction du nombre de points avec MIS1}
+\end{figure}
 
-BASE 2 ( 1 et 2 correspondent au MIS)
-2 - 1 - 100 points - Average size : 36 points - Average time : 2.0E-4 s - Fails : 0
-2 - 2 - 100 points - Average size : 37 points - Average time : 2.4E-4 s - Fails : 0
-2 - 1 - 500 points - Average size : 173 points - Average time : 0.00398 s - Fails : 0
-2 - 2 - 500 points - Average size : 179 points - Average time : 0.00375 s - Fails : 0
-2 - 1 - 1000 points - Average size : 351 points - Average time : 0.0149 s - Fails : 0
-2 - 2 - 1000 points - Average size : 365 points - Average time : 0.01398 s - Fails : 0
-2 - 1 - 5000 points - Average size : 377 points - Average time : 0.29543 s - Fails : 0
-2 - 2 - 5000 points - Average size : 393 points - Average time : 0.26125 s - Fails : 0
-2 - 1 - 10000 points - Average size : 384 points - Average time : 1.15217 s - Fails : 0
-2 - 2 - 10000 points - Average size : 400 points - Average time : 1.01027 s - Fails : 0
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[%
+  xlabel=Nombre de points,
+  ylabel=Taille du CDS,
+  xmin=0,
+  legend style={at={(1,0.5)},anchor=west},
+]
+  \addplot[color=red,mark=x]  coordinates {
+	(100, 37)
+	(500, 174)
+	(1000, 364)
+	(5000, 394)
+	(10000, 402)
+};
+  \addlegendentry{Base 1}
+  \addplot[color=blue,mark=x]  coordinates {
+	(100, 37)
+	(500, 179)
+	(1000, 365)
+	(5000, 393)
+	(10000, 400)
+};
+  \addlegendentry{Base 2}
+  \addplot[color=green,mark=x] coordinates {
+  	(100, 18)
+	(500, 180)
+	(1000, 365)
+	(5000, 907)
+	(10000, 1054)
+};
+  \addlegendentry{Base 3}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\captionof{figure}{Taille du CDS en fonction du nombre de points avec MIS2}
+\end{figure}
 
-BASE 3 ( 1 et 2 correspondent au MIS)
-3 - 1 - 100 points - Average size : 16 points - Average time : 2.9E-4 s - Fails : 0
-3 - 2 - 100 points - Average size : 18 points - Average time : 2.4E-4 s - Fails : 0
-3 - 1 - 500 points - Average size : 172 points - Average time : 0.0039 s - Fails : 0
-3 - 2 - 500 points - Average size : 180 points - Average time : 0.00367 s - Fails : 0
-3 - 1 - 1000 points - Average size : 352 points - Average time : 0.01476 s - Fails : 0
-3 - 2 - 1000 points - Average size : 365 points - Average time : 0.01395 s - Fails : 0
-3 - 1 - 5000 points - Average size : 873 points - Average time : 0.32062 s - Fails : 0
-3 - 2 - 5000 points - Average size : 907 points - Average time : 0.28485 s - Fails : 0
-3 - 1 - 10000 points - Average size : 1014 points - Average time : 1.20708 s - Fails : 0
-3 - 2 - 10000 points - Average size : 1054 points - Average time : 1.0546 s - Fails : 0
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[%
+  xlabel=Nombre de points,
+  ylabel=Temps d'exécution (secondes),
+  xmin=0,
+  legend style={at={(1,0.5)},anchor=west},
+]
+  \addplot[color=red,mark=x]  coordinates {
+	(100, 9.1E-4)
+	(500, 0.00425)
+	(1000, 0.01403)
+	(5000, 0.25969)
+	(10000, 1.01815)
+};
+  \addlegendentry{Base 1}
+  \addplot[color=blue,mark=x]  coordinates {
+	(100, 2.4E-4)
+	(500, 0.00398)
+	(1000, 0.0149)
+	(5000, 0.29543)
+	(10000, 1.15217)
+};
+  \addlegendentry{Base 2}
+  \addplot[color=green,mark=x] coordinates {
+  	(100, 2.9E-4)
+	(500, 0.00375)
+	(1000, 0.01398)
+	(5000, 0.28485)
+	(10000, 1.0546)
+};
+  \addlegendentry{Base 3}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\captionof{figure}{Temps d'exécution en fonction du nombre de points avec MIS2}
+\end{figure}
