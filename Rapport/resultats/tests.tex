@@ -67,15 +67,9 @@ Nous avons ensuite établi plusieurs bases de test :
     \hline
     1000  & 1000 $\times$ 1000  & 50 \\
     \hline
-    2000  & 1000 $\times$ 1000  & 50 \\
-    \hline
-    3000  & 1000 $\times$ 1000  & 50 \\
-    \hline
-    4000  & 1000 $\times$ 1000  & 50 \\
-    \hline
     5000  & 1000 $\times$ 1000  & 50 \\
     \hline
-    6000  & 1000 $\times$ 1000  & 50 \\
+    10000  & 1000 $\times$ 1000  & 50 \\
     \hline
 \end{tabular}
 \end{center}
@@ -94,15 +88,9 @@ Nous avons ensuite établi plusieurs bases de test :
     \hline
     1000  & 1000 $\times$ 1000  & 50 \\
     \hline
-    2000  & 2000 $\times$ 2000  & 100 \\
-    \hline
-    3000  & 3000 $\times$ 3000  & 150 \\
-    \hline
-    4000  & 4000 $\times$ 4000  & 200 \\
-    \hline
     5000  & 5000 $\times$ 5000  & 250 \\
     \hline
-    6000  & 6000 $\times$ 6000  & 300 \\
+    10000  & 10000 $\times$ 10000  & 500 \\
     \hline
 \end{tabular}
 \end{center}
@@ -121,25 +109,14 @@ Nous avons ensuite établi plusieurs bases de test :
     \hline
     1000  & 1000 $\times$ 1000  & 50 \\
     \hline
-    2000  & 2000 $\times$ 2000  & 78 \\
-    \hline
-    3000  & 3000 $\times$ 3000  & 106 \\
-    \hline
-    4000  & 4000 $\times$ 4000  & 133 \\
-    \hline
     5000  & 5000 $\times$ 5000  & 161 \\
     \hline
-    6000  & 6000 $\times$ 6000  & 189 \\
+    10000  & 10000 $\times$ 10000  & 300 \\
     \hline
 \end{tabular}
 \end{center}
 \captionof{table}{Base de tests 3}
 \end{figure}
-
-Le but de la base 3 était d'obtenir des CDS plus grands que les bases 1 et 2, pour cela on voulait fixer le seuil, les tests étant trop long a générer le seuil a été fixé à
-$$
-seuil = nbpoints \times \frac{1}{36} + \frac{200}{9}
-$$
 
 Nous avons mené nos tests sur les 2 implémentations possibles du MIS dot les résultats ont été consignés sur les graphes suivants :
 
@@ -192,7 +169,7 @@ Nous avons mené nos tests sur les 2 implémentations possibles du MIS dot les r
 \captionof{figure}{Taille du CDS en fonction du nombre de points avec MIS1}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}
 \begin{axis}[%
@@ -240,7 +217,7 @@ Nous avons mené nos tests sur les 2 implémentations possibles du MIS dot les r
 \captionof{figure}{Taille du CDS en fonction du nombre de points avec MIS2}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}[scale=1]
 \begin{axis}[%
@@ -277,7 +254,7 @@ Nous avons mené nos tests sur les 2 implémentations possibles du MIS dot les r
 \end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}[scale=1]
 \begin{axis}[%
@@ -314,7 +291,7 @@ Nous avons mené nos tests sur les 2 implémentations possibles du MIS dot les r
 \end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}
 \begin{axis}[%
