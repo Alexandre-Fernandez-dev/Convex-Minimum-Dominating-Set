@@ -141,30 +141,26 @@ grayNodes : ArrayList<NodeVertexDS = { graph } \ { MIS }
 for(n : MIS) { n.color = BLACK; n.disjointsetelement = new DisjointSetElement<NodeVertexDS>(n); }
 
 for( i from 5 to 2 ) {
-	cont = true;
-	while(cont) {
-		newblue = null;
-		for( gray in grayNodes ) {
-			if( gray.degree() < i ) continue;
+	for( j from 0 to grayNodes.size() ) {
+		gray = grayNodes.get(j);
+		if( gray.degree() < i ) continue;
+		
+		//assuming BlkNeighbors returns the black neighbors of a node
+		blackneighbors : ArrayList<NodeVertexDS> = BlkNeighbors(gray);
+		if( blackneighbors.size() < i ) continue;
+		
+		//assuming map is the functional transformation on list
+		rootsblackneighbors : ArrayList<DisjointElement> = List.map( blackneighbors, (x) => x.disjointsetelement.find() )
 			
-			//assuming BlkNeighbors returns the black neighbors of a node
-			blackneighbors : ArrayList<NodeVertexDS> = BlkNeighbors(gray);
-			if( blackneighbors.size() < i ) continue;
+		int nbDifferentBBC = new HashSet(rootsblackneighbors).size();
+		if( nbDifferentBBC < i ) continue;
 			
-			//assuming map is the functional transformation on list
-			rootsblackneighbors : ArrayList<DisjointElement> = List.map( blackneighbors, (x) => x.disjointsetelement.find() )
+		gray.color = BLUE;
+		newblue = GRAY;
 			
-			int nbDifferentBBC = new HashSet(rootsblackneighbors).size();
-			if( nbDifferentBBC < i ) continue;
-			
-			gray.color = BLUE;
-			newblue = GRAY;
-			
-			for( i from 1 to rootblackneighbors.size() -1) rootblackneighbors[i].union(rootblackneighbors[0]);
-			break;
-		}
-		if ( newblue != null ) grayNodes.remove(newblue);
-		else cont = false;
+		for( i from 1 to rootblackneighbors.size() -1) rootblackneighbors[i].union(rootblackneighbors[0]);
+		grayNodes.remove(j);
+		j--;
 	}
 }
 return BLACK and BLUE nodes;
@@ -176,4 +172,5 @@ C'est un parcours quadratique, mais sans cette étape, chaque recherche de voisi
 Ces deux recherches ont lieu dans des boucles parcourant un ensemble conséquent des points du graphe et peuvent être répétés pour un même point (les points gris traités pour i=5 peuvent être retraités pour i=4,3,2), cela correspond a plusieurs recherches quadratiques. Il convient de faire la recherche dès le début, de stocker le voisinage de tout les points, pour ne pas avoir à a recalculer le voisinage d'un point déjà calculé auparavant.
 
 \paragraph{}
-Soit \delta le degré maximal du graphe, 
+Les calculs de MIS sont linéaires en fonction du nombre de points (comme vu dans les parties précédentes).
+La partie qui permet de calculer le CDS a partir du MIS quand à elle, parcours

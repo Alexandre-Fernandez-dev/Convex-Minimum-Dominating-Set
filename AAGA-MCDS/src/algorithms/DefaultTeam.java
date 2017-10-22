@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 public class DefaultTeam {
 	public static int useMIS = 1;
+	public static long startedat = -1;
+	public static long stoppedat = -1;
+	public static int avdeg;
 
 	public ArrayList<Point> calculConnectedDominatingSet(ArrayList<Point> points, int edgeTreshold) {
 		ArrayList<NodeVertexDS> graph = new ArrayList<NodeVertexDS>();
@@ -34,8 +34,11 @@ public class DefaultTeam {
 				}
 			}
 		}
+		for (NodeVertexDS v : graph) {
+			avdeg+=v.degree();
+		}
+		avdeg/=graph.size();
 		// START
-
 		// CALCULATE MIS
 		ArrayList<NodeVertexDS> MIS = new ArrayList<NodeVertexDS>();
 		
@@ -43,63 +46,58 @@ public class DefaultTeam {
 			MIS = distributedMIS1(graph);
 		else if(DefaultTeam.useMIS == 2)
 			MIS = distributedMIS2(graph);
-		
 		// AT FIRST ALL ELEMENTS OF THE MIS ARE BLACK AND FORM DISJOINT BLACK-BLUE COMPONENTS
 		// MAKE A DISJOINT SET ELEMENT REPRESENTING A BLACK-BLUE COMPONENT (BB COMPONENTS)
 		for (NodeVertexDS vi : MIS) {
 			vi.color = Color.BLACK;
 			vi.makeDSElement();
 		}
+		
 
 		// GRAY NODES
 		ArrayList<NodeVertexDS> grayNodes = (ArrayList<NodeVertexDS>) graph.clone();
 		grayNodes.removeAll(MIS);
+		
+		startedat = System.nanoTime();
 
 		for (int i = 5; i >= 2; i--) {
-			boolean cont = true;
-			while (cont) { //WHILE THERE IS GRAY NODES WITH AT LEAST i BLACK NEIGHBORS IN DIFFERENT BB COMPONENTS
-				int newblueId = -1;
-				for (int j = 0; j < grayNodes.size(); j++) {
-					NodeVertexDS vgray = grayNodes.get(j);
-					if (vgray.degree() < i)
-						continue;
-					
-					//COUNT BLACK NEIGBORS
-					ArrayList<NodeVertexDS> blackneighbors = new ArrayList<NodeVertexDS>();
-					for (NodeVertexDS vgraynei : vgray.neighbors)
-						if (vgraynei.color == Color.BLACK)
-							blackneighbors.add(vgraynei);
-					if (blackneighbors.size() < i)
-						continue;
-					
-					//FIND ROOT NODE INDISJOINT SET OF ALL BLACK NEIGHBORS
-					ArrayList<DisjointSetElement<NodeVertexDS>> neiBBcompsroots = new ArrayList<DisjointSetElement<NodeVertexDS>>();
+			//SEARCH THE GRAY NODES THAT HAVE AT LEAST i BLACK NEIGHBORS IN DIFFERENT BB COMPONENTS
+			for (int j = 0; j < grayNodes.size(); j++) {
+				NodeVertexDS vgray = grayNodes.get(j);
+				if (vgray.degree() < i)
+					continue;
 
-					for (NodeVertexDS blackn : blackneighbors) {
-						neiBBcompsroots.add(blackn.disjointSetElem.find());
-					}
+				//COUNT BLACK NEIGBORS
+				ArrayList<NodeVertexDS> blackneighbors = new ArrayList<NodeVertexDS>();
+				for (NodeVertexDS vgraynei : vgray.neighbors)
+					if (vgraynei.color == Color.BLACK)
+						blackneighbors.add(vgraynei);
+				if (blackneighbors.size() < i)
+					continue;
 
-					//COUNT DIFFERENT BLACK BLUE COMPONENTS ( == number of black neighbors that are in different disjoint set)
-					HashSet<Integer> idsbbcomps = new HashSet<Integer>();
-					for (DisjointSetElement<NodeVertexDS> rootneibbcomp : neiBBcompsroots) {
-						idsbbcomps.add(rootneibbcomp.index);
-					}
-					if (idsbbcomps.size() < i)
-						continue;
-					
-					vgray.color = Color.BLUE;
-					newblueId = j;
-					// IF THE NODE HAS BEED TURNED TO BLUE, ALL BLACK BLUE COMPONENTS INDUCED
-					// BY ITS BLACK NEIGBORS ARE MERGED
-					for (int id = 1; id < neiBBcompsroots.size(); id++) {
-						blackneighbors.get(0).disjointSetElem.union(blackneighbors.get(id).disjointSetElem);
-					}
-					break;
+				//FIND ROOT NODE IN DISJOINT SET OF ALL BLACK NEIGHBORS
+				ArrayList<DisjointSetElement<NodeVertexDS>> neiBBcompsroots = new ArrayList<DisjointSetElement<NodeVertexDS>>();
+
+				for (NodeVertexDS blackn : blackneighbors) {
+					neiBBcompsroots.add(blackn.disjointSetElem.find());
 				}
-				if (newblueId != -1)
-					grayNodes.remove(newblueId);
-				else //NEXT FOR LOOP : DECREASE i
-					cont = false;
+
+				//COUNT DIFFERENT BLACK BLUE COMPONENTS ( == number of black neighbors that are in different disjoint set)
+				HashSet<Integer> idsbbcomps = new HashSet<Integer>();
+				for (DisjointSetElement<NodeVertexDS> rootneibbcomp : neiBBcompsroots) {
+					idsbbcomps.add(rootneibbcomp.index);
+				}
+				if (idsbbcomps.size() < i)
+					continue;
+
+				vgray.color = Color.BLUE;
+				// IF THE NODE HAS BEED TURNED TO BLUE, ALL BLACK BLUE COMPONENTS INDUCED
+				// BY ITS BLACK NEIGBORS ARE MERGED
+				for (int id = 1; id < neiBBcompsroots.size(); id++) {
+					blackneighbors.get(0).disjointSetElem.union(blackneighbors.get(id).disjointSetElem);
+				}
+				grayNodes.remove(j);
+				j--;
 			}
 
 		}
@@ -111,15 +109,17 @@ public class DefaultTeam {
 			if (v.color.equals(Color.BLACK))
 				result.add(v.p);
 		}
+		stoppedat = System.nanoTime();
+
 		return result;
 	}
-	
+
 	public ArrayList<NodeVertexDS> distributedMIS2(ArrayList<NodeVertexDS> points) {
 		ArrayList<NodeVertexDS> graph = (ArrayList<NodeVertexDS>) points.clone();
 		for (int i = 0; i < graph.size(); i++) {
 			graph.get(i).makeDSElement();
 		}
-				
+
 		//BUILD A SPANNING TREE (KRUSKAL USING DISJOINT SET AND WITHOUT CARE OF EDGE LENGTH)
 		for (NodeVertexDS v : graph) {
 			for(NodeVertexDS vn : v.neighbors) {
@@ -130,19 +130,19 @@ public class DefaultTeam {
 				}
 			}
 		}
-		
+
 		//CHOOSE ARBITRARY ROOT NODE FOR THE TREE
 		NodeVertexDS root = graph.get(0);
-		
+
 		//INITIATE TREE DATA STRUCTURE
 		//(converts treeNeighbors into parent and children and instanciate the int rank)
 		root.initiateRank(0);
-		
+
 		//root.checkRoot(); TEST
-				
+
 		//BUILD FINAL MIS USING COLORS AND SPANNING TREE + GRAPH STRUCTURE
 		buildColorsMIS2(root);
-		
+
 		ArrayList<NodeVertexDS> result = new ArrayList<NodeVertexDS>();
 		for(NodeVertexDS v : graph) {
 			if(v.color.equals(Color.BLACK))
@@ -150,17 +150,17 @@ public class DefaultTeam {
 		}
 		return result;
 	}
-	
+
 	private static void buildColorsMIS2(NodeVertexDS root) {
 		//ROOT IS MARKED BLACK
 		root.color = Color.BLACK;
 		ArrayList<NodeVertexDS> fifoNodes = new ArrayList<NodeVertexDS>();
 		fifoNodes.add(root);
-		
+
 		//BREADTH-FIRST SEARCH
 		while(!fifoNodes.isEmpty()) {
 			NodeVertexDS node = fifoNodes.remove(0);
-			
+
 			boolean countedOneBlack = false;
 			for(NodeVertexDS n : node.neighbors) {
 				if(n.color == Color.BLACK) countedOneBlack = true;
@@ -244,9 +244,9 @@ public class DefaultTeam {
 		}
 		return mis;
 	}
-	
+
 	public static boolean isValid(ArrayList<Point> points, ArrayList<Point> pts, int edgeTreshold) {
-		
+
 		//REBUILD THE GRAPH STRUCTURE
 		ArrayList<NodeVertexDS> graphcds = new ArrayList<NodeVertexDS>();
 		boolean ret = true;
@@ -264,14 +264,14 @@ public class DefaultTeam {
 				}
 			}
 		}
-		
+
 		//BUILD CONNEX COMPONENTS
 		for(NodeVertexDS v : graphcds) {
 			for(NodeVertexDS vn : v.neighbors) {
 				v.disjointSetElem.union(vn.disjointSetElem);
 			}
 		}
-		
+
 		//ENUMERATE CONNEX COMPONENTS
 		HashSet<DisjointSetElement<NodeVertexDS>> compconnex = new HashSet<DisjointSetElement<NodeVertexDS>>();
 		for(NodeVertexDS v : graphcds) {
@@ -281,11 +281,11 @@ public class DefaultTeam {
 			System.err.println("Error connexity : " + compconnex.size());
 			ret = false;
 		}
-		
+
 		//CHECK DOMINATING (removing all neighbors of dominating set)
 		ArrayList<Point> rest = (ArrayList<Point>) points.clone();
 		rest.removeAll(pts);
-		
+
 		for(int i=0; i<rest.size(); ) {
 			boolean removed = false;
 			Point p = rest.get(i);
@@ -302,11 +302,11 @@ public class DefaultTeam {
 			System.err.println("Error dominating : " + rest.size());
 			ret = false;
 		}
-		
+
 		return ret;
 	}
-	
-	
+
+
 	// verify mis is independent in points and all nodes in points are dominated
 	public boolean isMIS(ArrayList<NodeVertexDS> points, ArrayList<NodeVertexDS> mis) {
 		ArrayList<NodeVertexDS> rest = (ArrayList<NodeVertexDS>) points.clone();
@@ -322,66 +322,66 @@ public class DefaultTeam {
 			return true;
 		return false;
 	}
-	
+
 	////////////////////////////////////////////////////////////:////////////////////////////////////////
-	
+
 	// FILE PRINTER
-		public void saveToFile(String filename, ArrayList<Point> result) {
-			int index = 0;
-			try {
-				while (true) {
-					BufferedReader input = new BufferedReader(
-							new InputStreamReader(new FileInputStream(filename + Integer.toString(index) + ".points")));
-					try {
-						input.close();
-					} catch (IOException e) {
-						System.err.println(
-								"I/O exception: unable to close " + filename + Integer.toString(index) + ".points");
-					}
-					index++;
-				}
-			} catch (FileNotFoundException e) {
-				printToFile(filename + Integer.toString(index) + ".points", result);
-			}
-		}
-
-		public void printToFile(String filename, ArrayList<Point> points) {
-			try {
-				PrintStream output = new PrintStream(new FileOutputStream(filename));
-				int x, y;
-				for (Point p : points)
-					output.println(Integer.toString((int) p.getX()) + " " + Integer.toString((int) p.getY()));
-				output.close();
-			} catch (FileNotFoundException e) {
-				System.err.println("I/O exception: unable to create " + filename);
-			}
-		}
-
-		// FILE LOADER
-		public ArrayList<Point> readFromFile(String filename) {
-			String line;
-			String[] coordinates;
-			ArrayList<Point> points = new ArrayList<Point>();
-			try {
-				BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+	public void saveToFile(String filename, ArrayList<Point> result) {
+		int index = 0;
+		try {
+			while (true) {
+				BufferedReader input = new BufferedReader(
+						new InputStreamReader(new FileInputStream(filename + Integer.toString(index) + ".points")));
 				try {
-					while ((line = input.readLine()) != null) {
-						coordinates = line.split("\\s+");
-						points.add(new Point(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1])));
-					}
+					input.close();
 				} catch (IOException e) {
-					System.err.println("Exception: interrupted I/O.");
-				} finally {
-					try {
-						input.close();
-					} catch (IOException e) {
-						System.err.println("I/O exception: unable to close " + filename);
-					}
+					System.err.println(
+							"I/O exception: unable to close " + filename + Integer.toString(index) + ".points");
 				}
-			} catch (FileNotFoundException e) {
-				System.err.println("Input file not found.");
+				index++;
 			}
-			return points;
+		} catch (FileNotFoundException e) {
+			printToFile(filename + Integer.toString(index) + ".points", result);
 		}
+	}
+
+	public void printToFile(String filename, ArrayList<Point> points) {
+		try {
+			PrintStream output = new PrintStream(new FileOutputStream(filename));
+			int x, y;
+			for (Point p : points)
+				output.println(Integer.toString((int) p.getX()) + " " + Integer.toString((int) p.getY()));
+			output.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("I/O exception: unable to create " + filename);
+		}
+	}
+
+	// FILE LOADER
+	public ArrayList<Point> readFromFile(String filename) {
+		String line;
+		String[] coordinates;
+		ArrayList<Point> points = new ArrayList<Point>();
+		try {
+			BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+			try {
+				while ((line = input.readLine()) != null) {
+					coordinates = line.split("\\s+");
+					points.add(new Point(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1])));
+				}
+			} catch (IOException e) {
+				System.err.println("Exception: interrupted I/O.");
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+					System.err.println("I/O exception: unable to close " + filename);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println("Input file not found.");
+		}
+		return points;
+	}
 
 }

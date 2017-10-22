@@ -13,40 +13,25 @@ import java.util.Random;
 public class Main {
 
 	public static void main(String[] args) {
+		int[] nbpts = {100,500,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000};
 		try {
-			Files.createDirectories(Paths.get("tests1-100"));
-			Files.createDirectories(Paths.get("tests1-500"));
-			Files.createDirectories(Paths.get("tests1-1000"));
-			Files.createDirectories(Paths.get("tests1-5000"));
-			Files.createDirectories(Paths.get("tests1-10000"));
-			for(int i=1; i<=100; i++)
-				export(new File("tests1-100/test"+i+".points"), generateGraph(1000, 1000, 100, 50));
-			for(int i=1; i<=100; i++)
-				export(new File("tests1-500/test"+i+".points"), generateGraph(1000, 1000, 500, 50));
-			for(int i=1; i<=100; i++)
-				export(new File("tests1-1000/test"+i+".points"), generateGraph(1000, 1000, 1000, 50));
-			for(int i=1; i<=100; i++)
-				export(new File("tests1-5000/test"+i+".points"), generateGraph(1000, 1000, 5000, 50));
-			for(int i=1; i<=100; i++)
-				export(new File("tests1-10000/test"+i+".points"), generateGraph(1000, 1000, 10000, 50));
+//			for(int i=0; i< nbpts.length; i++) {
+//				Files.createDirectories(Paths.get("tests1-" + nbpts[i]));
+//				for(int j=1; j<=100; j++)
+//					export(new File("tests1-"+nbpts[i]+"/test"+j+".points"), generateGraph(1000, 1000, nbpts[i], 50));
+//			}
 			
+			for(int i=0; i< nbpts.length; i++) {
+				Files.createDirectories(Paths.get("tests2-" + nbpts[i]));
+				for(int j=1; j<=100; j++)
+					export(new File("tests2-"+nbpts[i]+"/test"+j+".points"), generateGraph(nbpts[i], nbpts[i], nbpts[i], nbpts[i]/20));
+			}
+//			for(int i=0; i< nbpts.length; i++) {
+//				Files.createDirectories(Paths.get("tests3-" + nbpts[i]));
+//				for(int j=1; j<=100; j++)
+//					export(new File("tests3-"+nbpts[i]+"/test"+j+".points"), generateGraph(nbpts[i], nbpts[i], nbpts[i], nbpts[i]*1/36+200/9));
+//			}
 			
-			Files.createDirectories(Paths.get("tests2-100"));
-			Files.createDirectories(Paths.get("tests2-500"));
-			Files.createDirectories(Paths.get("tests2-1000"));
-			Files.createDirectories(Paths.get("tests2-5000"));
-			Files.createDirectories(Paths.get("tests2-10000"));
-			for(int i=1; i<=100; i++)
-				export(new File("tests2-100/test"+i+".points"), generateGraph(100, 100, 100, 5));
-			for(int i=1; i<=100; i++)
-				export(new File("tests2-500/test"+i+".points"), generateGraph(500, 500, 500, 25));
-			for(int i=1; i<=100; i++)
-				export(new File("tests2-1000/test"+i+".points"), generateGraph(1000, 1000, 1000, 50));
-			for(int i=1; i<=100; i++)
-				export(new File("tests2-5000/test"+i+".points"), generateGraph(5000, 5000, 5000, 250));
-			for(int i=1; i<=100; i++)
-				export(new File("tests2-10000/test"+i+".points"), generateGraph(10000, 10000, 10000, 500));
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
