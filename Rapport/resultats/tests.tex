@@ -1,8 +1,13 @@
 \subsection{Tests}
 
 \paragraph{}
-Pour tester notre algorithme nous avont eu besoin de deux choses :
-La méthode isValid(), qui vérifie la validité de la solution calculée par notre algorithme, voici son pseudo-code :
+Pour tester notre algorithme nous avons eu besoin de deux choses :
+\begin{itemize}
+\item une fonction permettant de valider notre solution
+\item un fonction permettant de générer aléatoirement des tests
+\end{itemize}
+
+La méthode \verb?isValid()? qui vérifie la validité de la solution calculée par notre algorithme est donnée par le pseudo-code suivant :
 \begin{lstlisting}
 isValid(ArrayList<Point> graph, ArrayList<Points> cds, int edgeTreshold) {
 	valid = true;
@@ -34,7 +39,7 @@ isValid(ArrayList<Point> graph, ArrayList<Points> cds, int edgeTreshold) {
 \end{lstlisting}
 
 \paragraph{}
-Nous avons aussi eu besoin de générer des tests. Pour cela il conviens de générer des graphes géométriques de différentes tailles et avec des tresholds différents.
+Nous avons aussi eu besoin de générer des tests. Pour cela il convient de générer des graphes géométriques de différentes tailles et avec des seuils différents (valeur maximale pour que 2 points soient considérés voisins l'un de l'autre).
 Voici le pseudo code du générateur :
 \begin{lstlisting}
 generateGraph(width, heigth, nb, edgeTreshold) :
@@ -47,7 +52,7 @@ generateGraph(width, heigth, nb, edgeTreshold) :
 \end{lstlisting}
 
 \paragraph{}
-Nous avont ensuite établit plusieurs bases de test
+Nous avons ensuite établi plusieurs bases de test
 
 (S'il te plait sylvain fait des tableaux :p)
 

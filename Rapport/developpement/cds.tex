@@ -5,18 +5,14 @@ compute a MIS satisfying lemmas 1 and 2.
 color MIS nodes to black.
 color other nodes to grey.
 for i = 5; 4; 3; 2 do
-	while there exists a grey node
-		adjacent to at least i black
-		nodes in different black-blue
-		components
-	do change its color from grey to
-		blue;
+  while there exists a grey node adjacent to at least i black nodes in different black-blue components do 
+    change its color from grey to blue;
 return all blue nodes.
 \end{lstlisting}
 
 \paragraph{}
-La principale difficulté au niveau de l'implémentation de l'algorithme est au sujet des \textit{black-blue components}. Il faut rapidement identifier à quel \textit{black-blue component} appartient un point noir.
-De plus quand un nouveau point bleu est choisi, il provoque la fusion de tout ses \textit{black-blue components} voisins.
+La principale difficulté au niveau de l'implémentation de l'algorithme se situe au niveau des \textit{black-blue components}. Il faut rapidement identifier à quel \textit{black-blue component} appartient un point noir.
+De plus, un nouveau point bleu choisi provoque la fusion de tout ses \textit{black-blue components} voisins.
 La fusion de \textit{black-blue components} \textit{(BBC)} peut être coûteuse en fonction de l'implémentation.
 Une implémentation naïve consisterait à utiliser un ensemble de listes pour représenter les \textit{BBC}, chaque liste contenant les points appartenant à un \textit{BBC}.
 Considérons le cas au pire cas de toutes les opérations fusions de \textit{BBC}.
@@ -24,47 +20,47 @@ Considérons le cas au pire cas de toutes les opérations fusions de \textit{BBC
 \paragraph{}
 Considérons le cas dégénéré d'un chemin de points de degré 2.
 Dans ce cas, chaque point gris, a exactement deux voisins noirs.
-Pour chaque point gris, on va réaliser une unique fusion (ie : fusionner uniquement 2 \textit{BBC} ).
-Si l'on considère, pour simplifier l'analyse que l'ordre de choix des points gris est tel que on va toujours fusionner un même \textit{BBC} avec un \textit{BBC} ne contenant qu'un seul point, dans le cas pire, on vide toujours la liste la plus grande dans la liste ne faisant qu'un en taille. On obtient le nombre d'opération ci dessous :
+Pour chaque point gris, on va réaliser une unique fusion (i.e.\ fusionner uniquement 2 \textit{BBC}).
+Si l'on considère, pour simplifier l'analyse, que l'ordre de choix des points gris est tel qu'on va toujours fusionner un même BBC avec un BBC ne contenant qu'un seul point, dans le pire cas, on vide toujours la liste la plus grande dans la liste ne faisant que 1 en taille. On obtient le nombre d'opération ci dessous :
 
-\[
-1 + 2 + 3 + 4 + \dots + n = \frac{n(n+1)}{2} 
-\]
+$$
+1 + 2 + 3 + 4 + \dots + n = \frac{n(n+1)}{2} \textrm{ avec } n=taille(\textrm{\verb?MIS?})
+$$
 
-avec n=taille(MIS)
-
-On obtiens un coût en O($n{^2}$) pour les fusions.
+On obtiens un coût en $O(n{^2})$ pour les fusions.
 
 \paragraph{}
-Pour les recherches, on va faire un parcours de tout les BBC pour y trouver les voisins d'un point gris, ce qui, au pire cas où il faut parcourir tout les BBC pour y trouver les voisins, sachant que l'ensemble des points dans les BBC corresponds à la taille du MIS, on obtiens le nombre de comparaisons suivant :
+Pour les recherches, on va faire un parcours de tous les BBC pour y trouver les voisins d'un point gris, ce qui, au pire cas où il faut parcourir tout les BBC pour y trouver les voisins, sachant que l'ensemble des points dans les BBC corresponds à la taille du MIS, on obtiens le nombre de comparaisons suivant :
 
-\[
-n \times m
-\]
+$$
+n \times m \textrm{ avec } n=taille(\textrm{\verb?MIS?}) \textrm{ et }  m=taille(\textrm{\verb?ptsGris?})
+$$
 
-avec n=taille(MIS) et m=taille(ptsGris), taille(ptsGris) = taille(points) - taille(MIS).
+$$
+taille(\textrm{\verb?ptsGris?}) = taille(\textrm{\verb?points?}) - taille(\textrm{\verb?MIS?})
+$$
 
 \paragraph{}
-Ces deux opérations sont grossièrement au pire cas quadratiques et il convient de les optimiser. Pour cela, nous allons utiliser une structure de Disjoint-Set pour réaliser des opérations UNION et FIND pour représenter les BBC.
+Ces deux opérations sont, grossièrement, au pire cas quadratiques et il convient de les optimiser. Pour cela, nous allons utiliser une structure de \textit{Disjoint-Set} pour réaliser des opérations \verb?UNION? et \verb?FIND? pour représenter les BBC.
 
-Cette structure organise différents ensembles disjoints sous la forme d'une forêt d'arbres dont les noeuds pointent sur leur parents. Au début tout les BBC sont initialisés a un point noir et sont disjoints. Puis, lorsque l'on veut faire l'union de deux BBC, on cherche leur racines et si elles sont différentes, un parent commun est créé pour les deux racines : opération UNION.
+Cette structure organise différents ensembles disjoints sous la forme d'une forêt d'arbres dont les nœuds pointent sur leurs parents. Au début, tous les BBC sont initialisés à un point noir et sont disjoints. Puis, lorsque l'on veut faire l'union de deux BBC, on cherche leur racine et si elles sont différentes, un parent commun est créé pour les deux racines : opération \verb?UNION?.
 
 Lorsque l'on veut vérifier si deux points noirs appartiennent au même BBC, il suffit de remonter leurs parents jusqu'à la racine. Si deux points ont la même racine alors ils sont dans le même ensemble.
-Au pire cas, avec une implémentation naïve des Disjoint Set, les arbres peuvent prendre la forme d'un peigne et le coût au pire cas des opérations est O(n). Ce qui nous ramènerait a des complexités quadratiques pour la recherche et la fusion au cours de tout l'algorithme.
+Au pire cas, avec une implémentation naïve des Disjoint Set, les arbres peuvent prendre la forme d'un peigne et le coût au pire cas des opérations est en $O(n)$. Ce qui nous ramènerait a des complexités quadratiques pour la recherche et la fusion au cours de tout l'algorithme.
 
 \paragraph{}
-Cependant, deux optimisations simples sont très efficaces avec les UNION-FIND :
+Cependant, deux optimisations simples sont très efficaces avec les \verb?UNION-FIND? :
 
-- la path compression : lors d'une opération recherche, on remonte les éléments traversés comme fils de la racine.
+- la \textit{path compression} : lors d'une opération recherche, on remonte les éléments traversés comme fils de la racine.
 
-- l'union par rang : lors d'une fusion, si les deux arbres on la même taille, on créé une nouvelle racine, commune, pour ces deux arbre, cependant quand un arbre est moins haut que l'autre, on peut seulement ajouter comme parent de la racine de l'arbre le moins haut, la racine de l'arbre le plus haut.
+- l'\textit{union par rang} : lors d'une fusion, si les deux arbres ont la même taille, on créé une nouvelle racine commune pour ces deux arbres. Cependant, quand un arbre est moins haut que l'autre, on peut seulement ajouter comme parent de la racine de l'arbre le moins haut la racine de l'arbre le plus haut.
 
-Avec ces deux optimisations le coût amortis des deux opérations est O(a(n)) avec a l'inverse de la fonction d'Ackermann, une fonction ayant une croissance si lente qu'on peut la considérer comme une constante inférieure à 5 pour quelconque situation.
+Avec ces deux optimisations le coût amorti des deux opérations est en $O(a(n))$ avec $a$ l'inverse de la fonction d'Ackermann, une fonction ayant une croissance si lente qu'on peut la considérer comme une constante inférieure à 5 pour une situation quelconque.
 
-Il est justifié de parler de coût amortit dans notre cas, car on réalisera toujours des opérations find (réalisant la path compression) pour trouver les black blue components différents voisins d'un point gris, avec de réaliser des opérations union pour fusionner tout les bbc voisins d'un point nouvellement bleu.
+Il est justifié de parler de coût amorti dans notre cas car on réalisera toujours des opérations \verb?find? (réalisant la \textit{path compression}) pour trouver les \textit{black blue components} différents qui sont voisins d'un point gris, avant de réaliser des opérations \verb?union? pour fusionner tous les BBC voisins d'un point nouvellement bleu.
 
 \paragraph{}
-MakeSet créé des sets singletons pour l'initialisation :
+\verb?MakeSet? créé des sets singletons pour l'initialisation :
 \begin{lstlisting}
  function MakeSet(x)
    if x is not already present:
@@ -73,7 +69,7 @@ MakeSet créé des sets singletons pour l'initialisation :
      x.rank   := 0
 \end{lstlisting}
 
-Find implémente la recherche de la racine avec la path compression :
+\verb?Find? implémente la recherche de la racine avec la \textit{path compression} :
 \begin{lstlisting}
  function Find(x)
    if x.parent != x
@@ -81,7 +77,7 @@ Find implémente la recherche de la racine avec la path compression :
    return x.parent
 \end{lstlisting}
 
-Union fait l'union par rang
+\verb?Union? fait l'union par rang :
 \begin{lstlisting}
  function Union(x, y)
    xRoot := Find(x)
@@ -103,29 +99,29 @@ Union fait l'union par rang
 \end{lstlisting}
 
 \paragraph{}
-L'utilisation des Disjoint Set a d'autres avantages, l'algorithme est beaucoup plus simple a écrire une fois cette structure implémentée. De plus cette structure permet facilement de vérifier la connexité d'un graphe. Elle nous sera donc utile pour implémenter la fonction de vérification \verb?isValid? et pour générer des graphes géométriques connexes.
+L'utilisation des \textit{Disjoint Set} a d'autres avantages : l'algorithme est beaucoup plus simple à écrire une fois cette structure implémentée. De plus, cette structure permet facilement de vérifier la connexité d'un graphe. Elle nous sera donc utile pour implémenter la fonction de vérification \verb?isValid? et pour générer des graphes géométriques connexes.
 
 \paragraph{}
 Nos structures :
 \begin{lstlisting}
 class NodeVertexDS {
-	Point p;
-	Color c;
-	
-	ArrayList<NodeVertexDS> neighbors;
-	DisjointSetElement<NodeVertexDS> disjointsetelement;
-	
-	//d'autres attributs sont utilises pour definir la structure d'arbre necessaire pour l'algorithme du MIS 2
-	//d'autres attributs sont utilises pour l'algorithme du MIS 1
+  Point p;
+  Color c;
+  
+  ArrayList<NodeVertexDS> neighbors;
+  DisjointSetElement<NodeVertexDS> disjointsetelement;
+  
+  //d'autres attributs sont utilises pour definir la structure d'arbre necessaire pour l'algorithme du MIS 2
+  //d'autres attributs sont utilises pour l'algorithme du MIS 1
 }
 
 class DisjointSetElement<T> {
-	int index; //unique index
-	T data;
-	DisjointSetElement<T> parent;
-	int rank;
-	
-	//toutes les methodes pour implementer les disjoint set : en particulier find et union
+  int index; //unique index
+  T data;
+  DisjointSetElement<T> parent;
+  int rank;
+  
+  //toutes les methodes pour implementer les disjoint set : en particulier find et union
 }
 \end{lstlisting}
 
@@ -141,31 +137,31 @@ grayNodes : ArrayList<NodeVertexDS = { graph } \ { MIS }
 for(n : MIS) { n.color = BLACK; n.disjointsetelement = new DisjointSetElement<NodeVertexDS>(n); }
 
 for( i from 5 to 2 ) {
-	cont = true;
-	while(cont) {
-		newblue = null;
-		for( gray in grayNodes ) {
-			if( gray.degree() < i ) continue;
-			
-			//assuming BlkNeighbors returns the black neighbors of a node
-			blackneighbors : ArrayList<NodeVertexDS> = BlkNeighbors(gray);
-			if( blackneighbors.size() < i ) continue;
-			
-			//assuming map is the functional transformation on list
-			rootsblackneighbors : ArrayList<DisjointElement> = List.map( blackneighbors, (x) => x.disjointsetelement.find() )
-			
-			int nbDifferentBBC = new HashSet(rootsblackneighbors).size();
-			if( nbDifferentBBC < i ) continue;
-			
-			gray.color = BLUE;
-			newblue = GRAY;
-			
-			for( i from 1 to rootblackneighbors.size() -1) rootblackneighbors[i].union(rootblackneighbors[0]);
-			break;
-		}
-		if ( newblue != null ) grayNodes.remove(newblue);
-		else cont = false;
-	}
+  cont = true;
+  while(cont) {
+    newblue = null;
+    for( gray in grayNodes ) {
+      if( gray.degree() < i ) continue;
+      
+      //assuming BlkNeighbors returns the black neighbors of a node
+      blackneighbors : ArrayList<NodeVertexDS> = BlkNeighbors(gray);
+      if( blackneighbors.size() < i ) continue;
+      
+      //assuming map is the functional transformation on list
+      rootsblackneighbors : ArrayList<DisjointElement> = List.map( blackneighbors, (x) => x.disjointsetelement.find() )
+      
+      int nbDifferentBBC = new HashSet(rootsblackneighbors).size();
+      if( nbDifferentBBC < i ) continue;
+      
+      gray.color = BLUE;
+      newblue = GRAY;
+      
+      for( i from 1 to rootblackneighbors.size() -1) rootblackneighbors[i].union(rootblackneighbors[0]);
+      break;
+    }
+    if ( newblue != null ) grayNodes.remove(newblue);
+    else cont = false;
+  }
 }
 return BLACK and BLUE nodes;
 \end{lstlisting}
@@ -176,4 +172,4 @@ C'est un parcours quadratique, mais sans cette étape, chaque recherche de voisi
 Ces deux recherches ont lieu dans des boucles parcourant un ensemble conséquent des points du graphe et peuvent être répétés pour un même point (les points gris traités pour i=5 peuvent être retraités pour i=4,3,2), cela correspond a plusieurs recherches quadratiques. Il convient de faire la recherche dès le début, de stocker le voisinage de tout les points, pour ne pas avoir à a recalculer le voisinage d'un point déjà calculé auparavant.
 
 \paragraph{}
-Soit \delta le degré maximal du graphe, 
+Soit $\delta$ le degré maximal du graphe, 
