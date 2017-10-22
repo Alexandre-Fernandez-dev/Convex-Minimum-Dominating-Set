@@ -6,10 +6,10 @@ Un autre algorithme pour le MIS a été proposé par les auteurs. C'est un algor
 \item Colorer la racine en noir et envoyer un message \verb?noir? a tout ses voisins dans le graphe (broadcast)
 \item Lorsqu'un point reçoit un message \verb?noir?, il change sa couleur en gris et envoie un message \verb?gris? contenant son rang à tout ses voisins dans le graphe (broadcast)
 \item Lorsqu'un point reçoit un message \verb?gris?, il vérifie si le message gris vient d'un point au-dessus de lui (de rang inférieur) dans l'arbre, dans ce cas il décrémente un compteur \verb?k? (initialisé a son nombre de voisins dans le graphe de rang inférieur dans l'arbre). Lorsque ce compteur arrive à zéro il devient noir et diffuse un message \verb?noir?.
-\item Des envois de messages supplémentaires permettent à l'algorithme distribué de notifier la racine de la fin de la procédure. Ils ne nous intéresseront pas.
+\item Des envois de messages supplémentaires permettent à l'algorithme distribué de notifier la racine de la fin de la procédure.
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[scale=0.6]{images/figureMIS.jpg}
 \caption{Construction du MIS}
