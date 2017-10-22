@@ -1,26 +1,5 @@
 \subsection{Construction de l'ensemble dominant connexe}
-\paragraph{}
-L'algorithme Li et al. commence par obtenir un MIS respectant les lemmes 1 et 2 ci dessous et construit un CDS.
-
-\begin{lemma}
-In any unit disk graph, the size of every
-maximal independent set is upper-bounded by
-3.8opt + 1.2 where opt is the size of the minimum
-connected dominating set in this unit disk graph.
-\end{lemma}
-\begin{lemma}
-Any pair of complementary subsets of the
-MIS have a distance of exactly two hops.
-\end{lemma}
-
-\paragraph{}
-Le lemme 1 garantit que le ratio de la solution de cet algorithme par rapport à la solution optimale est bien 4.8 + ln5. La validité de ce lemme dépends beaucoup de nos choix d'implémentation pour les algorithmes de construction MIS. Ces algorithmes étant prévus pour fonctionner de façon distribuée, nos implémentations, non distribuées, ne se comporte donc pas exactement comme ceux-ci.
-
-Le lemme 2 est d'une importance majeure pour la validité de la solution. En effet, si une paire de sous-ensemble complémentaires du MIS ont une distance de moins de deux sauts, le MIS sera plus grand qu'escompté. On risque donc dans ce cas d'obtenir un résultat final plus grand.
-A l'inverse, si la distance entre deux sous ensembles complémentaires du MIS est de plus de deux sauts. L'algorithme, essayant de relier ces sous-ensemble du MIS en colorant des nœuds contenant au minimum un voisin dans chacun de ces sous ensembles, ne pourra pas relier ces deux sous ensemble. L'ensemble obtenu sera constitué d'au moins 2 composantes connexes correspondant au deux ensembles complémentaires du MIS ayant une distance de plus de deux sauts.
-
-\paragraph{}
-Algorithme du CDS :
+L'algorithme construit le CDS tel qu'il est décrit dans le papier :
 \begin{lstlisting}
 compute a MIS satisfying lemmas 1 and 2.
 color MIS nodes to black.
@@ -48,8 +27,9 @@ Dans ce cas, chaque point gris, a exactement deux voisins noirs.
 Pour chaque point gris, on va réaliser une unique fusion (ie : fusionner uniquement 2 \textit{BBC} ).
 Si l'on considère, pour simplifier l'analyse que l'ordre de choix des points gris est tel que on va toujours fusionner un même \textit{BBC} avec un \textit{BBC} ne contenant qu'un seul point, dans le cas pire, on vide toujours la liste la plus grande dans la liste ne faisant qu'un en taille. On obtient le nombre d'opération ci dessous :
 
-\paragraph{}
-1 + 2 + 3 + 4 + ... + n = \( \displaystyle \frac{n(n+1)}{2} \)
+\[
+1 + 2 + 3 + 4 + \dots + n = \frac{n(n+1)}{2} 
+\]
 
 avec n=taille(MIS)
 
@@ -58,8 +38,9 @@ On obtiens un coût en O($n{^2}$) pour les fusions.
 \paragraph{}
 Pour les recherches, on va faire un parcours de tout les BBC pour y trouver les voisins d'un point gris, ce qui, au pire cas où il faut parcourir tout les BBC pour y trouver les voisins, sachant que l'ensemble des points dans les BBC corresponds à la taille du MIS, on obtiens le nombre de comparaisons suivant :
 
-\paragraph{}
-\(n \times m\)
+\[
+n \times m
+\]
 
 avec n=taille(MIS) et m=taille(ptsGris), taille(ptsGris) = taille(points) - taille(MIS).
 
@@ -122,9 +103,7 @@ Union fait l'union par rang
 \end{lstlisting}
 
 \paragraph{}
-L'utilisation des Disjoint Set a d'autres avantages, l'algorithme est beaucoup plus simple a écrire une fois cette structure implémentée.
-
-De plus cette structure permet facilement de vérifier la connexité d'un graphe. Elle nous sera donc utile pour implémenter la fonction de vérification isValid et pour générer des graphes géométriques connexes.
+L'utilisation des Disjoint Set a d'autres avantages, l'algorithme est beaucoup plus simple a écrire une fois cette structure implémentée. De plus cette structure permet facilement de vérifier la connexité d'un graphe. Elle nous sera donc utile pour implémenter la fonction de vérification \verb?isValid? et pour générer des graphes géométriques connexes.
 
 \paragraph{}
 Nos structures :

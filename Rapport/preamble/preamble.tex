@@ -16,6 +16,8 @@
 \usepackage{csquotes}
 \usepackage{mathabx}
 \usepackage{fancyhdr}
+\usepackage{cleveref}
+
 \pagestyle{fancy}
 \fancyhead[L]{\thepage}
 \fancyhead[R]{Ensemble Dominant Connexe Glouton}
@@ -55,4 +57,7 @@
   tabsize=3
 }
 
-\newtheorem{lemma}{Lemma}
+\newtheorem{defn}{Définition}[subsection] 
+\newtheorem{lemma}{Lemme}[subsection] 
+\crefname{lemma}{Lemme}{Lemmes}
+\crefname{defn}{Définition}{Définitions}
