@@ -169,3 +169,11 @@ for( i from 5 to 2 ) {
 }
 return BLACK and BLUE nodes;
 \end{lstlisting}
+
+\paragraph{}
+L'opération makeGraph fait un double parcours des points des graphes et construit une liste de NodeVertexDS et créé leur listes de voisins.
+C'est un parcours quadratique, mais sans cette étape, chaque recherche de voisin coûtera O(n) (n nombre de points du graphe). Ces recherches auront lieu lors de la construction du MIS et lors de la recherche des voisins des nœuds gris.
+Ces deux recherches ont lieu dans des boucles parcourant un ensemble conséquent des points du graphe et peuvent être répétés pour un même point (les points gris traités pour i=5 peuvent être retraités pour i=4,3,2), cela correspond a plusieurs recherches quadratiques. Il convient de faire la recherche dès le début, de stocker le voisinage de tout les points, pour ne pas avoir à a recalculer le voisinage d'un point déjà calculé auparavant.
+
+\paragraph{}
+Soit \delta le degré maximal du graphe, 
